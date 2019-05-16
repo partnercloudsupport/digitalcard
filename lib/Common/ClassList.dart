@@ -322,7 +322,7 @@ class MemberClass {
     return MemberClass(
       Id: json['Id'] as String,
       Name: json['Name'] as String,
-      Company: json['Description'] as String,
+      Company: json['Company'] as String,
       Role: json['Role'] as String,
       website: json['website'] as String,
       About: json['About'] as String,

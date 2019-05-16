@@ -14,6 +14,7 @@ class _HomeState extends State<Home> {
   DashboardCountClass _dashboardCount =
       new DashboardCountClass(visitors: '0', calls: '0', share: '0');
 
+  bool isLoading = false;
   String MemberId = "";
   String Name = "";
   String Company = "";
@@ -68,6 +69,9 @@ class _HomeState extends State<Home> {
   }
 
   GetDashboardCount() async {
+    setState(() {
+      isLoading = true;
+    });
     List<DashboardCountClass> _dashboardCountList =
         await Services.GetDashboardCount();
     if (_dashboardCountList != null && _dashboardCountList.length > 0) {
@@ -75,6 +79,9 @@ class _HomeState extends State<Home> {
         _dashboardCount = _dashboardCountList[0];
       });
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -142,11 +149,16 @@ class _HomeState extends State<Home> {
                         child: Container(
                           child: Column(
                             children: <Widget>[
-                              Text(_dashboardCount.visitors,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: cnst.appcolor,
-                                      fontWeight: FontWeight.w600)),
+                              !isLoading
+                                  ? Text(_dashboardCount.visitors,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: cnst.appcolor,
+                                          fontWeight: FontWeight.w600))
+                                  : CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.blue),
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text("Visitors",
@@ -172,11 +184,16 @@ class _HomeState extends State<Home> {
                         child: Container(
                           child: Column(
                             children: <Widget>[
-                              Text(_dashboardCount.share,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: cnst.appcolor,
-                                      fontWeight: FontWeight.w600)),
+                              !isLoading
+                                  ? Text(_dashboardCount.share,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: cnst.appcolor,
+                                          fontWeight: FontWeight.w600))
+                                  : CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.blue),
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text("Share",
@@ -202,11 +219,16 @@ class _HomeState extends State<Home> {
                         child: Container(
                           child: Column(
                             children: <Widget>[
-                              Text(_dashboardCount.calls,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: cnst.appcolor,
-                                      fontWeight: FontWeight.w600)),
+                              !isLoading
+                                  ? Text(_dashboardCount.calls,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: cnst.appcolor,
+                                          fontWeight: FontWeight.w600))
+                                  : CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.blue),
+                                    ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text("Calls",

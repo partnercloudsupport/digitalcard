@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:image_picker/image_picker.dart';
 import 'package:digitalcard/Component/ImagePickerHandlerComponent.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:digitalcard/Common/Services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -17,9 +22,15 @@ Color colorThree = Colors.grey[500];
 class _SignupState extends State<Signup>
     with TickerProviderStateMixin,ImagePickerListener{
 
+  bool isLoading = false;
   File _image;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
+
+  TextEditingController txtName = new TextEditingController();
+  TextEditingController txtMobile = new TextEditingController();
+  TextEditingController txtCompany = new TextEditingController();
+  TextEditingController txtEmail = new TextEditingController();
 
   @override
   void initState() {
@@ -34,10 +45,82 @@ class _SignupState extends State<Signup>
 
   }
 
+  String GetRandomNo(int length){
+    String UniqueNo = "";
+    var rng = new Random();
+    for (var i = 0; i < length; i++) {
+      UniqueNo += rng.nextInt(10).toString();
+    }
+    return UniqueNo;
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  SaveOffer() async {
+    if (txtName.text != '' && txtMobile.text != '' && txtCompany.text != '' && txtEmail.text != '') {
+      setState(() {
+        isLoading = true;
+      });
+
+      String img = '';
+      String referCode = txtName.text.substring(0,3).toUpperCase() + GetRandomNo(5);
+
+      if (_image != null){
+        List<int> imageBytes = await _image.readAsBytesSync();
+        String base64Image = base64Encode(imageBytes);
+        img = base64Image;
+      }
+      print('base64 Img : $img');
+      print('RefferCode : $referCode');
+
+      var data = {
+        'type': 'signup',
+        'name': txtName.text,
+        'mobile': txtMobile.text,
+        'company': txtCompany.text,
+        'email': txtEmail.text,
+        'imagecode': img,
+        'referCode': referCode
+      };
+
+      Future res = Services.MemberSignUp(data);
+      res.then((data) {
+        setState(() {
+          isLoading = false;
+        });
+        if (data != null && data.ERROR_STATUS == false) {
+          Fluttertoast.showToast(
+              msg: "Data Saved",
+              backgroundColor: Colors.green,
+              gravity: ToastGravity.TOP);
+          Navigator.pushReplacementNamed(context, '/Login');
+        } else {
+          Fluttertoast.showToast(
+              msg: "Data Not Saved" + data.MESSAGE,
+              backgroundColor: Colors.red,
+              gravity: ToastGravity.TOP,
+              toastLength: Toast.LENGTH_LONG);
+        }
+      }, onError: (e) {
+        setState(() {
+          isLoading = false;
+        });
+        Fluttertoast.showToast(
+            msg: "Data Not Saved" + e.toString(), backgroundColor: Colors.red);
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please Enter Data First",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.yellow,
+          textColor: Colors.black,
+          fontSize: 15.0);
+    }
   }
 
   @override
@@ -94,9 +177,30 @@ class _SignupState extends State<Signup>
                             borderRadius: BorderRadius.all(Radius.circular(5))
                         ),
                         child: TextFormField(
+                          controller: txtName,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.perm_identity),
                             hintText: "Name"
+                          ),
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        //height: 40,
+                        width: MediaQuery.of(context).size.width - 60,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        margin: EdgeInsets.only(top: 20),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(255, 255, 255, 0.5),
+                            border: new Border.all(width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+                        child: TextFormField(
+                          controller: txtMobile,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.phone_android),
+                              hintText: "Mobile"
                           ),
                           keyboardType: TextInputType.number,
                           style: TextStyle(color: Colors.black),
@@ -113,32 +217,12 @@ class _SignupState extends State<Signup>
                             borderRadius: BorderRadius.all(Radius.circular(5))
                         ),
                         child: TextFormField(
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.phone_android),
-                              hintText: "Mobile"
-                          ),
-                          keyboardType: TextInputType.text,
-                          obscureText: true,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        //height: 40,
-                        width: MediaQuery.of(context).size.width - 60,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 0),
-                        margin: EdgeInsets.only(top: 20),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(255, 255, 255, 0.5),
-                            border: new Border.all(width: 1),
-                            borderRadius: BorderRadius.all(Radius.circular(5))
-                        ),
-                        child: TextFormField(
+                          controller: txtCompany,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.business_center),
                               hintText: "Company"
                           ),
                           keyboardType: TextInputType.text,
-                          obscureText: true,
                           style: TextStyle(color: Colors.black),
                         ),
                         //height: 40,
@@ -152,12 +236,12 @@ class _SignupState extends State<Signup>
                             borderRadius: BorderRadius.all(Radius.circular(5))
                         ),
                         child: TextFormField(
+                          controller: txtEmail,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.local_post_office),
                               hintText: "Email"
                           ),
                           keyboardType: TextInputType.emailAddress,
-                          obscureText: true,
                           style: TextStyle(color: Colors.black),
                         ),
                         //height: 40,
@@ -197,13 +281,9 @@ class _SignupState extends State<Signup>
                             elevation: 5,
                             textColor: Colors.white,
                             color: cnst.buttoncolor,
-                            child: Text("Sign up",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15)),
+                            child: setUpButtonChild(),
                             onPressed: () {
-                              Navigator.pushNamed(context, "/Dashboard");
+                              SaveOffer();
                             },
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0))
@@ -250,6 +330,19 @@ class _SignupState extends State<Signup>
     setState(() {
       this._image = _image;
     });
+  }
+  Widget setUpButtonChild() {
+    if (isLoading == false) {
+      return new Text(
+        "Sign Up",
+        style: TextStyle(
+            color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600),
+      );
+    } else {
+      return CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+    }
   }
 }
 

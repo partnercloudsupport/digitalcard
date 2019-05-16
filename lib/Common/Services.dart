@@ -287,4 +287,64 @@ class Services {
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
   }
+
+  static Future<SaveDataClass> SaveService(data) async {
+    String url = APIURL.API_URL + 'AddService';
+    print("AddOffer URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        SaveDataClass data;
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+        return data;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("SaveTA Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<SaveDataClass> MemberSignUp(data) async {
+    String url = APIURL.API_URL + 'MemberSignUp';
+    print("AddOffer URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        SaveDataClass data;
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+        return data;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("SaveTA Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<SaveDataClass> SaveShare(data) async {
+    String url = APIURL.API_URL + 'AddShare';
+    print("AddShare URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        SaveDataClass data;
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+        return data;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("SaveTA Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
 }

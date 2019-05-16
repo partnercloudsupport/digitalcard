@@ -3,13 +3,11 @@ import 'dart:io';
 
 import 'package:digitalcard/Common/Services.dart';
 import 'package:flutter/material.dart';
-import 'package:digitalcard/Component/OfferComponent.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:digitalcard/Component/HeaderComponent.dart';
 import 'package:digitalcard/Component/ImagePickerHandlerComponent.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:digitalcard/Common/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddOffer extends StatefulWidget {
@@ -99,7 +97,7 @@ class _AddOfferState extends State<AddOffer>
               msg: "Data Saved",
               backgroundColor: Colors.green,
               gravity: ToastGravity.TOP);
-          Navigator.popAndPushNamed(context, '/Dashboard');
+          Navigator.pushReplacementNamed(context, '/Dashboard');
         } else {
           Fluttertoast.showToast(
               msg: "Data Not Saved" + data.MESSAGE,
