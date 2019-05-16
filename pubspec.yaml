@@ -1,0 +1,88 @@
+name: digitalcard
+description: digitalcard
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+  http: ^0.12.0+1
+  url_launcher: ^5.0.2
+  share: ^0.6.1+1
+  contacts_service: ^0.2.5
+  permission_handler: any
+  fluttertoast: ^3.0.3
+  image_picker: ^0.6.0+2
+  flutter_cupertino_date_picker: ^0.3.0
+  intro_views_flutter: ^2.6.0
+  shared_preferences: ^0.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+  - images/user.png
+  - images/users.png
+  - images/logo.png
+  - images/profilebg.jpg
+  - images/offers_small.png
+  - images/offers_big.png
+  - images/service_small.png
+  - images/service_big.png
+  - images/profile_small.png
+  - images/profile_big.png
+  - images/cancel.png
+  - images/refer.png
+  - images/appshare.png
+  - images/friend.png
+  - images/earn.png
+  - images/wallet.png
+  - images/idcard.png
+  - images/nooffer.jpg
+  #social
+  - images/social/mail.png
+  - images/social/chat.png
+  - images/social/facebook.png
+  - images/social/whatsapp.png
+  - images/social/share.png
+  - images/social/whatsapp24.png
+  - images/social/facebook24.png
+  - images/social/twitter24.png
+  - images/social/googleplus24.png
+  - images/social/linkedin24.png
+  - images/social/youtube24.png
+  - images/social/instagram24.png
+  #header
+  - images/header/moreheader.jpg
+  - images/header/servicehearde.jpg
+  - images/header/offerheader.jpg
+  - images/header/referheader.jpg
+  #profile
+  - images/profile/user24.png
+  - images/profile/telephone24.png
+  - images/profile/telephoneold24.png
+  - images/profile/gmail24.png
+  - images/profile/domain24.png
+  - images/profile/negotiation24.png
+  - images/profile/office24.png
+  - images/profile/role24.png
+  - images/profile/google24.png
+  - images/profile/placeholder24.png
+
+  fonts:
+  - family: Montserrat
+    fonts:
+    - asset: fonts/Montserrat-Regular.ttf
+    - asset: fonts/Montserrat-Bold.ttf
+      weight: 700
+    - asset: fonts/Montserrat-SemiBold.ttf
+      weight: 400
