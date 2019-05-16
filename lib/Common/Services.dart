@@ -9,7 +9,6 @@ import 'package:digitalcard/Common/Constants.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
 
 class Services {
-  //For Login Data
   static Future<List<MemberClass>> MemberLogin(String mobileno) async {
     String url =
         APIURL.API_URL + 'Member_login?type=mobilelogin&mobileno=$mobileno';
@@ -39,7 +38,6 @@ class Services {
     }
   }
 
-  //For DashboardCount Class Data
   static Future<List<DashboardCountClass>> GetDashboardCount() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String memberId = prefs.getString(cnst.Session.MemberId);
@@ -59,6 +57,41 @@ class Services {
 
           if (dashboardCountDataClass.ERROR_STATUS == false)
             list = dashboardCountDataClass.Data;
+          else
+            list = [];
+
+          return list;
+        } else {
+          throw Exception(MESSAGES.INTERNET_ERROR);
+        }
+      } catch (e) {
+        print("GetDashboardCount Erorr : " + e.toString());
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } else
+      return list;
+  }
+
+  static Future<List<EarnRedeemCountClass>> GetEarnRedeemCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String memberId = prefs.getString(cnst.Session.MemberId);
+    String referCode = prefs.getString(cnst.Session.ReferCode);
+
+    List<EarnRedeemCountClass> list = [];
+
+    if (memberId != null && memberId != "") {
+      String url = APIURL.API_URL +
+          'GetEarnRedeemCount?type=earnredeemcount&referCode=$referCode&memberid=$memberId';
+      print("GetEarnRedeemCount URL: " + url);
+      final response = await http.get(url);
+      try {
+        if (response.statusCode == 200) {
+          final jsonResponse = json.decode(response.body);
+          EarnRedeemCountDataClass earnRedeemCountDataClass =
+          new EarnRedeemCountDataClass.fromJson(jsonResponse);
+
+          if (earnRedeemCountDataClass.ERROR_STATUS == false)
+            list = earnRedeemCountDataClass.Data;
           else
             list = [];
 
@@ -320,7 +353,7 @@ class Services {
         return saveDataClass;
         return data;
       } else {
-        throw Exception(MESSAGES.INTERNET_ERROR);
+        throw Exception(response.body);
       }
     } catch (e) {
       print("SaveTA Erorr : " + e.toString());
@@ -346,5 +379,41 @@ class Services {
       print("SaveTA Erorr : " + e.toString());
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
+  }
+
+  static Future<List<MemberClass>> GetMemberDetail(String mobileno) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String memberId = prefs.getString(cnst.Session.MemberId);
+
+    List<MemberClass> list = [];
+
+    if (memberId != null && memberId != "") {
+      String url =
+          APIURL.API_URL + 'Member_login?type=memberdetail&memberid=$memberId';
+      print("MemberLogin URL: " + url);
+      final response = await http.get(url);
+      try {
+        if (response.statusCode == 200) {
+          print("MemberLogin Response: " + response.body);
+
+          final jsonResponse = json.decode(response.body);
+          MemberDataClass memberDataClass =
+          new MemberDataClass.fromJson(jsonResponse);
+
+          if (memberDataClass.ERROR_STATUS == false)
+            list = memberDataClass.Data;
+          else
+            list = [];
+
+          return list;
+        } else {
+          throw Exception(MESSAGES.INTERNET_ERROR);
+        }
+      } catch (e) {
+        print("Check Login Erorr : " + e.toString());
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } else
+      return list;
   }
 }

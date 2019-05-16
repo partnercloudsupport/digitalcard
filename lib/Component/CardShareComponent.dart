@@ -7,6 +7,9 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:digitalcard/Common/Services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CardShareComponent extends StatefulWidget {
   final String memberId;
@@ -104,6 +107,28 @@ class _CardShareComponentState extends State<CardShareComponent> {
     return urlwithprofilelink;
   }
 
+  SaveShare() async {
+    var data = {
+      'type': 'share',
+      'name': txtName.text,
+      'mobile': txtMobile.text,
+      'memberid': widget.memberId.toString(),
+    };
+
+    Future res = Services.SaveShare(data);
+    res.then((data) {
+      if (data != null && data.ERROR_STATUS == false) {
+        print("Share Saved");
+      } else {
+        print("Saher Not Saved");
+      }
+      Navigator.pop(context);
+    }, onError: (e) {
+      print(e.toString());
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,7 +196,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                     urlwithmobile.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
-                                Navigator.pop(context);
+                                SaveShare();
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "Please fill all details",
@@ -204,7 +229,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                     urlwithmobile.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
-                                Navigator.pop(context);
+                                SaveShare();
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "Please fill all details",
@@ -238,7 +263,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                     urlwithsubject.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
-                                Navigator.pop(context);
+                                SaveShare();
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "Please fill all details",
@@ -335,7 +360,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   txtMobile.text != "") {
                                 String msg = ShareMessage();
                                 Share.share(msg);
-                                Navigator.pop(context);
+                                SaveShare();
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "Please fill all details",
@@ -370,7 +395,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                       padding: EdgeInsets.only(top: 50),
                       child: MaterialButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          SaveShare();
                         },
                         child: Icon(
                           Icons.close,

@@ -31,6 +31,7 @@ class _SignupState extends State<Signup>
   TextEditingController txtMobile = new TextEditingController();
   TextEditingController txtCompany = new TextEditingController();
   TextEditingController txtEmail = new TextEditingController();
+  TextEditingController txtRegCode = new TextEditingController();
 
   @override
   void initState() {
@@ -84,7 +85,8 @@ class _SignupState extends State<Signup>
         'company': txtCompany.text,
         'email': txtEmail.text,
         'imagecode': img,
-        'referCode': referCode
+        'myreferCode': referCode,
+        'regreferCode': txtRegCode.text
       };
 
       Future res = Services.MemberSignUp(data);
@@ -227,7 +229,8 @@ class _SignupState extends State<Signup>
                         ),
                         //height: 40,
                         width: MediaQuery.of(context).size.width - 60,
-                      ),Container(
+                      ),
+                      Container(
                         padding: EdgeInsets.symmetric(horizontal: 0),
                         margin: EdgeInsets.only(top: 20),
                         decoration: BoxDecoration(
@@ -240,6 +243,26 @@ class _SignupState extends State<Signup>
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.local_post_office),
                               hintText: "Email"
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        //height: 40,
+                        width: MediaQuery.of(context).size.width - 60,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        margin: EdgeInsets.only(top: 20),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(255, 255, 255, 0.5),
+                            border: new Border.all(width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+                        child: TextFormField(
+                          controller: txtRegCode,
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.device_hub),
+                              hintText: "Referral Code"
                           ),
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(color: Colors.black),

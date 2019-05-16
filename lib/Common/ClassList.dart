@@ -79,7 +79,6 @@ class DashboardCountDataClass {
             .toList());
   }
 }
-
 class DashboardCountClass {
   String visitors;
   String share;
@@ -499,5 +498,44 @@ class RedeemHistoryClass {
         Points: json['Points'] as String,
         Date: json['Date'] as String,
         OrderNo: json['OrderNo'] as String);
+  }
+}
+
+class EarnRedeemCountDataClass {
+  String MESSAGE;
+  String ORIGINAL_ERROR;
+  bool ERROR_STATUS;
+  bool RECORDS;
+  List<EarnRedeemCountClass> Data;
+
+  EarnRedeemCountDataClass(
+      {this.MESSAGE,
+        this.ORIGINAL_ERROR,
+        this.ERROR_STATUS,
+        this.RECORDS,
+        this.Data});
+
+  factory EarnRedeemCountDataClass.fromJson(Map<String, dynamic> json) {
+    return EarnRedeemCountDataClass(
+        MESSAGE: json['MESSAGE'] as String,
+        ORIGINAL_ERROR: json['ORIGINAL_ERROR'] as String,
+        ERROR_STATUS: json['ERROR_STATUS'] as bool,
+        RECORDS: json['RECORDS'] as bool,
+        Data: json['Data']
+            .map<EarnRedeemCountClass>(
+                (json) => EarnRedeemCountClass.fromJson(json))
+            .toList());
+  }
+}
+class EarnRedeemCountClass {
+  String EarnCount;
+  String RedeemCount;
+
+  EarnRedeemCountClass({this.EarnCount, this.RedeemCount});
+
+  factory EarnRedeemCountClass.fromJson(Map<String, dynamic> json) {
+    return EarnRedeemCountClass(
+        EarnCount: json['EarnCount'] as String,
+        RedeemCount: json['RedeemCount'] as String);
   }
 }
