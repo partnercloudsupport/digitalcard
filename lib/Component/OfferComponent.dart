@@ -30,7 +30,7 @@ class OfferComponent extends StatelessWidget {
                       fontWeight: FontWeight.w600,color: cnst.appcolor)),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: Text(offerClass.Descri,
+                    child: Text('${offerClass.Descri.substring(0,65)}...',
                         style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: Colors.grey[600])),
                   ),
                 ],
@@ -39,18 +39,21 @@ class OfferComponent extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text("Available till :",
-                        style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: Colors.grey[600])),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(offerClass.Date,
-                          style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: cnst.appcolor)),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Text("Available till :",
+                          style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: Colors.grey[600])),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Text(offerClass.ValidTill,
+                            style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: cnst.appcolor)),
+                      ),
+                    ],
+                  ),
                 ),
-                ClipRRect(
+                /*ClipRRect(
                   borderRadius: BorderRadius.circular(30.0),
                   child: MaterialButton(
                     padding: EdgeInsets.symmetric(horizontal: 20),
@@ -60,7 +63,7 @@ class OfferComponent extends StatelessWidget {
                     child: Text("Interested",
                       style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600)),
                   ),
-                )
+                )*/
               ],
             ),
           ],

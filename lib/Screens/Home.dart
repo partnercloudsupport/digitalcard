@@ -11,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   DashboardCountClass _dashboardCount =
       new DashboardCountClass(visitors: '0', calls: '0', share: '0');
 
@@ -32,15 +31,15 @@ class _HomeState extends State<Home> {
     String name = prefs.getString(cnst.Session.Name);
     String company = prefs.getString(cnst.Session.Company);
 
-    if(memberId != null && memberId != "")
+    if (memberId != null && memberId != "")
       setState(() {
         MemberId = memberId;
       });
-    if(name != null && name != "")
+    if (name != null && name != "")
       setState(() {
         Name = name;
       });
-    if(company != null && company != "")
+    if (company != null && company != "")
       setState(() {
         Company = company;
       });
@@ -259,7 +258,8 @@ class _HomeState extends State<Home> {
                           Navigator.of(context).push(PageRouteBuilder(
                               opaque: false,
                               pageBuilder: (BuildContext context, _, __) =>
-                                  CardShareComponent()));
+                                  CardShareComponent(
+                                      memberId: MemberId, memberName: Name)));
                         },
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0))),

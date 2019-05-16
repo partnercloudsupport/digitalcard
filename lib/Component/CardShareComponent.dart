@@ -9,6 +9,12 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CardShareComponent extends StatefulWidget {
+  final String memberId;
+  final String memberName;
+
+  const CardShareComponent({Key key, this.memberId, this.memberName})
+      : super(key: key);
+
   @override
   _CardShareComponentState createState() => _CardShareComponentState();
 }
@@ -17,7 +23,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
   TextEditingController txtName = new TextEditingController();
   TextEditingController txtMobile = new TextEditingController();
 
-  String sender = "Kapil R Singh";
+  String sender = "";
   Iterable<Contact> _contacts;
 
   @override
@@ -75,6 +81,27 @@ class _CardShareComponentState extends State<CardShareComponent> {
           message: "Location data is not available on device",
           details: null);
     }
+  }
+
+  String ShareMessage() {
+    String shareMessage = cnst.shareMessage;
+    String url = cnst.profileUrl;
+
+    //Replace static string with userid
+    url = url.replaceAll("#id", widget.memberId);
+
+    //Replace static string with recever
+    String urlwithrecever = shareMessage.replaceAll("#recever", txtName.text);
+
+    //Replace static string with Sender
+    String urlwithsender =
+        urlwithrecever.replaceAll("#sender", widget.memberName);
+
+    //Replace static string with Link
+    String urlwithprofilelink =
+        urlwithsender.replaceAll("#link", Uri.encodeComponent(url));
+
+    return urlwithprofilelink;
   }
 
   @override
@@ -135,25 +162,13 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   txtMobile.text != null &&
                                   txtMobile.text != "") {
                                 String whatsAppLink = cnst.whatsAppLink;
-                                String shareMessage = cnst.shareMessage;
-                                String url = cnst.profileUrl;
 
-                                //Replace static string with userid
-                                url = url.replaceAll("#id", '1');
-
-                                //Replace static string with userid
-                                String urlwithrecever = shareMessage.replaceAll(
-                                    "#recever", txtName.text);
-                                String urlwithsender = urlwithrecever
-                                    .replaceAll("#sender", sender);
-                                String urlwithprofilelink =
-                                    urlwithsender.replaceAll(
-                                        "#link", Uri.encodeComponent(url));
+                                String msg = ShareMessage();
 
                                 String urlwithmobile = whatsAppLink.replaceAll(
                                     "#mobile", "91${txtMobile.text}");
-                                String urlwithmsg = urlwithmobile.replaceAll(
-                                    "#msg", urlwithprofilelink);
+                                String urlwithmsg =
+                                    urlwithmobile.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
                                 Navigator.pop(context);
@@ -180,25 +195,13 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   txtMobile.text != null &&
                                   txtMobile.text != "") {
                                 String smsLink = cnst.smsLink;
-                                String shareMessage = cnst.shareMessage;
-                                String url = cnst.profileUrl;
 
-                                //Replace static string with userid
-                                url = url.replaceAll("#id", '1');
-
-                                //Replace static string with userid
-                                String urlwithrecever = shareMessage.replaceAll(
-                                    "#recever", txtName.text);
-                                String urlwithsender = urlwithrecever
-                                    .replaceAll("#sender", sender);
-                                String urlwithprofilelink =
-                                    urlwithsender.replaceAll(
-                                        "#link", Uri.encodeComponent(url));
+                                String msg = ShareMessage();
 
                                 String urlwithmobile = smsLink.replaceAll(
                                     "#mobile", "91${txtMobile.text}");
-                                String urlwithmsg = urlwithmobile.replaceAll(
-                                    "#msg", urlwithprofilelink);
+                                String urlwithmsg =
+                                    urlwithmobile.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
                                 Navigator.pop(context);
@@ -225,27 +228,14 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   txtMobile.text != null &&
                                   txtMobile.text != "") {
                                 String mailLink = cnst.mailLink;
-                                String shareMessage = cnst.shareMessage;
-                                String url = cnst.profileUrl;
-
-                                //Replace static string with userid
-                                url = url.replaceAll("#id", '1');
-
-                                //Replace static string with userid
-                                String urlwithrecever = shareMessage.replaceAll(
-                                    "#recever", txtName.text);
-                                String urlwithsender = urlwithrecever
-                                    .replaceAll("#sender", sender);
-                                String urlwithprofilelink =
-                                    urlwithsender.replaceAll(
-                                        "#link", Uri.encodeComponent(url));
+                                String msg = ShareMessage();
 
                                 String urlwithmail =
                                     mailLink.replaceAll("#mail", "");
                                 String urlwithsubject = urlwithmail.replaceAll(
                                     "#subject", "$sender Digital Card");
-                                String urlwithmsg = urlwithsubject.replaceAll(
-                                    "#msg", urlwithprofilelink);
+                                String urlwithmsg =
+                                    urlwithsubject.replaceAll("#msg", msg);
 
                                 launch(urlwithmsg.toString());
                                 Navigator.pop(context);
@@ -343,7 +333,9 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   txtName.text != "" &&
                                   txtMobile.text != null &&
                                   txtMobile.text != "") {
-                                Share.share("Share Text");
+                                String msg = ShareMessage();
+                                Share.share(msg);
+                                Navigator.pop(context);
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "Please fill all details",
@@ -377,7 +369,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                     Padding(
                       padding: EdgeInsets.only(top: 50),
                       child: MaterialButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pop(context);
                         },
                         child: Icon(

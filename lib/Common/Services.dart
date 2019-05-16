@@ -143,7 +143,8 @@ class Services {
       return list;
   }
 
-  static Future<List<OfferInterestedClass>> GetOfferInterested(String offerid) async {
+  static Future<List<OfferInterestedClass>> GetOfferInterested(
+      String offerid) async {
     List<OfferInterestedClass> list = [];
     String url = APIURL.API_URL +
         'GetOfferInterested?type=offerinterested&offerid=$offerid';
@@ -216,7 +217,7 @@ class Services {
         if (response.statusCode == 200) {
           final jsonResponse = json.decode(response.body);
           RedeemHistoryDataClass redeemHistoryDataClass =
-          new RedeemHistoryDataClass.fromJson(jsonResponse);
+              new RedeemHistoryDataClass.fromJson(jsonResponse);
 
           if (redeemHistoryDataClass.ERROR_STATUS == false)
             list = redeemHistoryDataClass.Data;
@@ -249,7 +250,7 @@ class Services {
         if (response.statusCode == 200) {
           final jsonResponse = json.decode(response.body);
           ShareDataClass shareDataClass =
-          new ShareDataClass.fromJson(jsonResponse);
+              new ShareDataClass.fromJson(jsonResponse);
 
           if (shareDataClass.ERROR_STATUS == false)
             list = shareDataClass.Data;
@@ -274,14 +275,9 @@ class Services {
     try {
       if (response.statusCode == 200) {
         SaveDataClass data;
-        if (response.body != "" && response.body.toString() != "[]") {
-          final parsed =
-              json.decode(response.body).cast<Map<String, dynamic>>();
-          var reasonClassData = parsed
-              .map<SaveDataClass>((json) => SaveDataClass.fromJson(json))
-              .toList();
-          data = reasonClassData[0];
-        }
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
         return data;
       } else {
         throw Exception(MESSAGES.INTERNET_ERROR);

@@ -74,7 +74,7 @@ class _OfferDetailState extends State<OfferDetail> {
                                             color: Colors.grey[600])),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 5),
-                                      child: Text(widget.offerClass.Date,
+                                      child: Text(widget.offerClass.ValidTill,
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class _OfferDetailState extends State<OfferDetail> {
                               ],
                             ),
                           ),
-                          MaterialButton(
+                          /*MaterialButton(
                             onPressed: () {
                               //Navigator.pushNamed(context, "/OfferInterestedMembers");
                               Navigator.push(
@@ -108,7 +108,7 @@ class _OfferDetailState extends State<OfferDetail> {
                                         fontWeight: FontWeight.w600))
                               ],
                             ),
-                          )
+                          )*/
                         ],
                       ),
                     ),

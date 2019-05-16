@@ -170,8 +170,15 @@ class OfferClass {
   String Descri;
   String Image;
   String Date;
+  String ValidTill;
 
-  OfferClass({this.Id, this.Title, this.Descri, this.Image, this.Date});
+  OfferClass(
+      {this.Id,
+      this.Title,
+      this.Descri,
+      this.Image,
+      this.Date,
+      this.ValidTill});
 
   factory OfferClass.fromJson(Map<String, dynamic> json) {
     return OfferClass(
@@ -179,7 +186,8 @@ class OfferClass {
         Title: json['Title'] as String,
         Descri: json['Descri'] as String,
         Image: json['Image'] as String,
-        Date: json['Date'] as String);
+        Date: json['Date'] as String,
+        ValidTill: json['ValidTill'] as String);
   }
 }
 
@@ -280,45 +288,66 @@ class MemberClass {
   String MemberType;
   String RegistrationPoints;
 
-
-  MemberClass({this.Id, this.Name, this.Company, this.Role, this.website,
-      this.About, this.Image, this.Mobile, this.Email, this.Whatsappno,
-      this.Facebooklink, this.CompanyAddress, this.CompanyPhone,
-      this.CompanyUrl, this.CompanyEmail, this.GMap, this.Twitter, this.Google,
-      this.Linkedin, this.Youtube, this.Instagram, this.CoverImage,
-      this.MyReferralCode, this.RegistrationRefCode, this.JoinDate,
-      this.ExpDate, this.MemberType, this.RegistrationPoints});
+  MemberClass(
+      {this.Id,
+      this.Name,
+      this.Company,
+      this.Role,
+      this.website,
+      this.About,
+      this.Image,
+      this.Mobile,
+      this.Email,
+      this.Whatsappno,
+      this.Facebooklink,
+      this.CompanyAddress,
+      this.CompanyPhone,
+      this.CompanyUrl,
+      this.CompanyEmail,
+      this.GMap,
+      this.Twitter,
+      this.Google,
+      this.Linkedin,
+      this.Youtube,
+      this.Instagram,
+      this.CoverImage,
+      this.MyReferralCode,
+      this.RegistrationRefCode,
+      this.JoinDate,
+      this.ExpDate,
+      this.MemberType,
+      this.RegistrationPoints});
 
   factory MemberClass.fromJson(Map<String, dynamic> json) {
     return MemberClass(
-        Id: json['Id'] as String,
-        Name: json['Name'] as String,
-        Company: json['Description'] as String,
-        Role: json['Role'] as String,
-        website: json['website'] as String,
-        About: json['About'] as String,
-        Image: json['Image'] as String,
-        Mobile: json['Mobile'] as String,
-        Email: json['Email'] as String,
-        Whatsappno: json['Whatsappno'] as String,
-        Facebooklink: json['Facebooklink'] as String,
-        CompanyAddress: json['CompanyAddress'] as String,
-        CompanyPhone: json['CompanyPhone'] as String,
-        CompanyUrl: json['CompanyUrl'] as String,
-        CompanyEmail: json['CompanyEmail'] as String,
-        GMap: json['Map'] as String,
-        Twitter: json['Twitter'] as String,
-        Google: json['Google'] as String,
-        Linkedin: json['Linkedin'] as String,
-        Youtube: json['Youtube'] as String,
-        Instagram: json['Instagram'] as String,
-        CoverImage: json['CoverImage'] as String,
-        MyReferralCode: json['MyReferralCode'] as String,
-        RegistrationRefCode: json['RegistrationRefCode'] as String,
-        JoinDate: json['JoinDate'] as String,
-        ExpDate: json['ExpDate'] as String,
-        MemberType: json['MemberType'] as String,
-        RegistrationPoints: json['RegistrationPoints'] as String,
+      Id: json['Id'] as String,
+      Name: json['Name'] as String,
+      Company: json['Description'] as String,
+      Role: json['Role'] as String,
+      website: json['website'] as String,
+      About: json['About'] as String,
+      Image: json['Image'] as String,
+      Mobile: json['Mobile'] as String,
+      Email: json['Email'] as String,
+      Whatsappno: json['Whatsappno'] as String,
+      Facebooklink: json['Facebooklink'] as String,
+      CompanyAddress: json['CompanyAddress'] as String,
+      CompanyPhone: json['CompanyPhone'] as String,
+      CompanyUrl: json['CompanyUrl'] as String,
+      CompanyEmail: json['CompanyEmail'] as String,
+      GMap: json['Map'] as String,
+      Twitter: json['Twitter'] as String,
+      Google: json['Google'] as String,
+      Linkedin: json['Linkedin'] as String,
+      Youtube: json['Youtube'] as String,
+      Instagram: json['Instagram'] as String,
+      CoverImage: json['CoverImage'] as String,
+      MyReferralCode: json['MyReferralCode'] as String,
+      RegistrationRefCode: json['RegistrationRefCode'] as String,
+      JoinDate: json['JoinDate'] as String,
+      ExpDate: json['ExpDate'] as String,
+      MemberType: json['MemberType'] as String,
+      RegistrationPoints: json['RegistrationPoints'] as String,
     );
   }
 }
@@ -389,10 +418,10 @@ class EarnHistoryDataClass {
 
   EarnHistoryDataClass(
       {this.MESSAGE,
-        this.ORIGINAL_ERROR,
-        this.ERROR_STATUS,
-        this.RECORDS,
-        this.Data});
+      this.ORIGINAL_ERROR,
+      this.ERROR_STATUS,
+      this.RECORDS,
+      this.Data});
 
   factory EarnHistoryDataClass.fromJson(Map<String, dynamic> json) {
     return EarnHistoryDataClass(
@@ -401,8 +430,7 @@ class EarnHistoryDataClass {
         ERROR_STATUS: json['ERROR_STATUS'] as bool,
         RECORDS: json['RECORDS'] as bool,
         Data: json['Data']
-            .map<EarnHistoryClass>(
-                (json) => EarnHistoryClass.fromJson(json))
+            .map<EarnHistoryClass>((json) => EarnHistoryClass.fromJson(json))
             .toList());
   }
 }
@@ -415,11 +443,7 @@ class EarnHistoryClass {
   String JoinDate;
 
   EarnHistoryClass(
-      {this.Id,
-        this.Name,
-        this.Image,
-        this.RegistrationPoints,
-        this.JoinDate});
+      {this.Id, this.Name, this.Image, this.RegistrationPoints, this.JoinDate});
 
   factory EarnHistoryClass.fromJson(Map<String, dynamic> json) {
     return EarnHistoryClass(
@@ -440,10 +464,10 @@ class RedeemHistoryDataClass {
 
   RedeemHistoryDataClass(
       {this.MESSAGE,
-        this.ORIGINAL_ERROR,
-        this.ERROR_STATUS,
-        this.RECORDS,
-        this.Data});
+      this.ORIGINAL_ERROR,
+      this.ERROR_STATUS,
+      this.RECORDS,
+      this.Data});
 
   factory RedeemHistoryDataClass.fromJson(Map<String, dynamic> json) {
     return RedeemHistoryDataClass(
@@ -466,11 +490,7 @@ class RedeemHistoryClass {
   String OrderNo;
 
   RedeemHistoryClass(
-      {this.Id,
-        this.Title,
-        this.Points,
-        this.Date,
-        this.OrderNo});
+      {this.Id, this.Title, this.Points, this.Date, this.OrderNo});
 
   factory RedeemHistoryClass.fromJson(Map<String, dynamic> json) {
     return RedeemHistoryClass(
