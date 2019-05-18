@@ -381,7 +381,27 @@ class Services {
     }
   }
 
-  static Future<List<MemberClass>> GetMemberDetail(String mobileno) async {
+  static Future<SaveDataClass> UpdateProfile(data) async {
+    String url = APIURL.API_URL + 'UpdateProfile';
+    print("UpdateProfile URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        SaveDataClass data;
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+        return data;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("UpdateProfile Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<List<MemberClass>> GetMemberDetail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String memberId = prefs.getString(cnst.Session.MemberId);
 
@@ -389,7 +409,7 @@ class Services {
 
     if (memberId != null && memberId != "") {
       String url =
-          APIURL.API_URL + 'Member_login?type=memberdetail&memberid=$memberId';
+          APIURL.API_URL + 'GetMemberDetail?type=memberdetail&memberid=$memberId';
       print("MemberLogin URL: " + url);
       final response = await http.get(url);
       try {

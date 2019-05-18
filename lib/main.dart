@@ -17,6 +17,7 @@ import 'package:digitalcard/Screens/PhoneContact.dart';
 import 'package:digitalcard/Screens/AddOffer.dart';
 import 'package:digitalcard/Screens/AddService.dart';
 import 'package:digitalcard/Screens/EditProfile.dart';
+import 'package:digitalcard/Screens/ProfileDetail.dart';
 import 'package:digitalcard/Screens/AppIntro.dart';
 
 void main() => runApp(MyApp());
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         '/AddOffer': (context) => AddOffer(),
         '/AddService': (context) => AddService(),
         '/EditProfile': (context) => EditProfile(),
+        '/ProfileDetail': (context) => ProfileDetail(),
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',

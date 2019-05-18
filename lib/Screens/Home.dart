@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
                                   fontWeight: FontWeight.w600))),
                       GestureDetector(
                         onTap: () =>
-                            Navigator.pushNamed(context, "/EditProfile"),
+                            Navigator.pushNamed(context, "/ProfileDetail"),
                         child: Icon(Icons.edit),
                       )
                     ],

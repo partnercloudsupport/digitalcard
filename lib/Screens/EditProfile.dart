@@ -4,20 +4,24 @@ import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:digitalcard/Component/HeaderComponent.dart';
 import 'package:digitalcard/Component/ImagePickerHandlerComponent.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:digitalcard/Common/Services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:digitalcard/Common/ClassList.dart';
 
 class EditProfile extends StatefulWidget {
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile>
-    with TickerProviderStateMixin, ImagePickerListener {
+class _EditProfileState extends State<EditProfile> {
   File _image;
   AnimationController _controller;
   ImagePickerHandler imagePicker;
 
   bool showProfileEdit = false;
   bool showCompanyEdit = false;
+
+  MemberClass memberdata = new MemberClass();
 
   TextEditingController txtDate = new TextEditingController();
 
@@ -61,13 +65,7 @@ class _EditProfileState extends State<EditProfile>
   @override
   void initState() {
     super.initState();
-    _controller = new AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-
-    imagePicker = new ImagePickerHandler(this, _controller);
-    imagePicker.init();
+    GetProfileData();
     txtDate.text = date.year.toString() +
         '-' +
         date.month.toString() +
@@ -79,6 +77,39 @@ class _EditProfileState extends State<EditProfile>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  GetProfileData() {
+    Services.GetMemberDetail().then((data) {
+      setState(() {
+        memberdata = data[0];
+      });
+      SetDataToController();
+    });
+  }
+
+  SetDataToController() {
+    //Profile Data
+    txtName.text = memberdata.Name;
+    txtMobile.text = memberdata.Mobile;
+    txtEmail.text = memberdata.Email;
+    txtWebsite.text = memberdata.website;
+    txtWhatsApp.text = memberdata.Whatsappno;
+    txtFaceboook.text = memberdata.Facebooklink;
+    txtTwitter.text = memberdata.Twitter;
+    txtGoogle.text = memberdata.Google;
+    txtLinkedin.text = memberdata.Linkedin;
+    txtYoutube.text = memberdata.Youtube;
+    txtIntagram.text = memberdata.Instagram;
+    txtAbout.text = memberdata.About;
+
+    //Company Data
+    txtCompany.text = memberdata.Company;
+    txtRole.text = memberdata.Role;
+    txtPhone.text = memberdata.CompanyPhone;
+    txtCompanyEmail.text = memberdata.CompanyEmail;
+    txtCompanyUrl.text = memberdata.CompanyUrl;
+    txtAddress.text = memberdata.CompanyAddress;
   }
 
   @override
@@ -102,40 +133,32 @@ class _EditProfileState extends State<EditProfile>
                   Stack(
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () => imagePicker.showDialog(context),
-                        child: Image.asset(
-                          "images/profilebg.jpg",
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          fit: BoxFit.cover,
-                        ),
+                        onTap: () => _coverImagePopup(context),
+                        child: memberdata.CoverImage != null
+                            ? Image.network(memberdata.CoverImage,
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover)
+                            : Image.asset("images/profilebg.jpg",
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 0,top: 50),
+                        padding: const EdgeInsets.only(bottom: 0, top: 50),
                         child: GestureDetector(
                           onTap: () => imagePicker.showDialog(context),
                           child: new Center(
-                            child: _image == null
-                                ? Image.asset(
-                              "images/user.png",
-                              height: 100.0,
-                              width: 100.0,
-                            )
-                                : new Container(
-                              height: 100.0,
-                              width: 100.0,
-                              decoration: new BoxDecoration(
-                                color: const Color(0xff7c94b6),
-                                image: new DecorationImage(
-                                  image: new ExactAssetImage(_image.path),
-                                  fit: BoxFit.cover,
-                                ),
-                                border: Border.all(
-                                    color: cnst.buttoncolor, width: 2.0),
-                                borderRadius: new BorderRadius.all(
-                                    const Radius.circular(60.0)),
-                              ),
-                            ),
+                            child: memberdata.Image != null
+                                ? ClipOval(
+                                    child: Image.network(memberdata.Image,
+                                        height: 100.0, width: 100.0,fit: BoxFit.fill),
+                                  )
+                                : Image.asset(
+                                    "images/user.png",
+                                    height: 100.0,
+                                    width: 100.0,
+                                  ),
                           ),
                         ),
                       ),
@@ -185,7 +208,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/user24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("Arpit R Shah",
+                                  child: Text(
+                                      memberdata.Name != null
+                                          ? memberdata.Name
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -202,7 +228,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/telephone24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("9033608708",
+                                  child: Text(
+                                      memberdata.Mobile != null
+                                          ? memberdata.Mobile
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -219,7 +248,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/gmail24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("arpitshah24@gmail.com",
+                                  child: Text(
+                                      memberdata.Email != null
+                                          ? memberdata.Email
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -236,7 +268,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/domain24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://arpitshah.com",
+                                  child: Text(
+                                      memberdata.website != null
+                                          ? memberdata.website
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -253,7 +288,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/social/whatsapp24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("9033608708",
+                                  child: Text(
+                                      memberdata.Whatsappno != null
+                                          ? memberdata.Whatsappno
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -268,13 +306,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/facebook24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://facebook.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Facebooklink != null
+                                            ? memberdata.Facebooklink
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -285,13 +329,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/twitter24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://twitter.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Twitter != null
+                                            ? memberdata.Twitter
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -302,13 +352,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/googleplus24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://google.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Google != null
+                                            ? memberdata.Google
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -319,13 +375,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/linkedin24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://linkedin.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Linkedin != null
+                                            ? memberdata.Linkedin
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -336,13 +398,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/youtube24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://youtube.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Youtube != null
+                                            ? memberdata.Youtube
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -353,13 +421,19 @@ class _EditProfileState extends State<EditProfile>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Image.asset("images/social/instagram24.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("http://instagram.com/arpit24",
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600)),
+                                Container(
+                                  width: MediaQuery.of(context).size.width - 80,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text(
+                                        memberdata.Instagram != null
+                                            ? memberdata.Instagram
+                                            : "",
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600)),
+                                  ),
                                 ),
                               ],
                             ),
@@ -376,7 +450,9 @@ class _EditProfileState extends State<EditProfile>
                                     width:
                                         MediaQuery.of(context).size.width - 90,
                                     child: Text(
-                                        "She is working with Scoie insurance since aug 2018 as Telly marketing executive. She is hard working and honest.",
+                                        memberdata.About != null
+                                            ? memberdata.About
+                                            : "",
                                         style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 15,
@@ -435,11 +511,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtName,
                               decoration: InputDecoration(
                                   prefixIcon:
                                       Image.asset("images/profile/user24.png"),
                                   hintText: "Name"),
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.text,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -454,12 +531,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtMobile,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/profile/telephone24.png"),
                                   hintText: "Mobile"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -474,12 +551,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtEmail,
                               decoration: InputDecoration(
                                   prefixIcon:
                                       Image.asset("images/profile/gmail24.png"),
                                   hintText: "Email"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -494,6 +571,7 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtWebsite,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/profile/domain24.png"),
@@ -513,12 +591,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtWhatsApp,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/whatsapp24.png"),
                                   hintText: "Whatsapp No"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -533,12 +611,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtFaceboook,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/facebook24.png"),
                                   hintText: "Facebook"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -553,6 +631,7 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtTwitter,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/twitter24.png"),
@@ -572,12 +651,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtGoogle,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/googleplus24.png"),
                                   hintText: "Google"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -592,12 +671,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtLinkedin,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/linkedin24.png"),
                                   hintText: "Linkedin"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -612,6 +691,7 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtYoutube,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/youtube24.png"),
@@ -631,12 +711,12 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
+                              controller: txtIntagram,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/social/instagram24.png"),
                                   hintText: "Instagram"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -651,33 +731,13 @@ class _EditProfileState extends State<EditProfile>
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5))),
                             child: TextFormField(
-                              decoration: InputDecoration(
-                                  prefixIcon: Image.asset(
-                                      "images/social/linkedin24.png"),
-                                  hintText: "Linkedin"),
-                              keyboardType: TextInputType.text,
-                              obscureText: true,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            //height: 40,
-                            width: MediaQuery.of(context).size.width - 60,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            margin: EdgeInsets.only(top: 10),
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(255, 255, 255, 0.5),
-                                border: new Border.all(width: 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: TextFormField(
+                              controller: txtAbout,
                               maxLines: 3,
                               decoration: InputDecoration(
                                   prefixIcon: Image.asset(
                                       "images/profile/negotiation24.png"),
                                   hintText: "About"),
                               keyboardType: TextInputType.text,
-                              obscureText: true,
                               style: TextStyle(color: Colors.black),
                             ),
                             //height: 40,
@@ -728,7 +788,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/office24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("IT Futurz",
+                                  child: Text(
+                                      memberdata.Company != null
+                                          ? memberdata.Company
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -745,7 +808,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/role24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("Owner",
+                                  child: Text(
+                                      memberdata.Role != null
+                                          ? memberdata.Role
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -759,10 +825,14 @@ class _EditProfileState extends State<EditProfile>
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Image.asset("images/profile/telephoneold24.png"),
+                                Image.asset(
+                                    "images/profile/telephoneold24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("9033608708",
+                                  child: Text(
+                                      memberdata.CompanyPhone != null
+                                          ? memberdata.CompanyPhone
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -779,7 +849,10 @@ class _EditProfileState extends State<EditProfile>
                                 Image.asset("images/profile/gmail24.png"),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: Text("info@itfuturz.com",
+                                  child: Text(
+                                      memberdata.CompanyEmail != null
+                                          ? memberdata.CompanyEmail
+                                          : "",
                                       style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 15,
@@ -797,8 +870,12 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width - 90,
-                                    child: Text("http://itfuturz.com",
+                                    width:
+                                        MediaQuery.of(context).size.width - 90,
+                                    child: Text(
+                                        memberdata.CompanyUrl != null
+                                            ? memberdata.CompanyUrl
+                                            : "",
                                         style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 15,
@@ -817,9 +894,12 @@ class _EditProfileState extends State<EditProfile>
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width - 90,
+                                    width:
+                                        MediaQuery.of(context).size.width - 90,
                                     child: Text(
-                                        "216, sns arista, opp. happy residency, near prime shoppers, vesu, surat",
+                                        memberdata.CompanyAddress != null
+                                            ? memberdata.CompanyAddress
+                                            : "",
                                         style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 15,
@@ -873,6 +953,7 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtCompany,
                             decoration: InputDecoration(
                                 prefixIcon:
                                     Image.asset("images/profile/office24.png"),
@@ -892,12 +973,12 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtRole,
                             decoration: InputDecoration(
                                 prefixIcon:
                                     Image.asset("images/profile/role24.png"),
                                 hintText: "Role"),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
                             style: TextStyle(color: Colors.black),
                           ),
                           //height: 40,
@@ -912,12 +993,12 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtPhone,
                             decoration: InputDecoration(
                                 prefixIcon: Image.asset(
                                     "images/profile/telephoneold24.png"),
                                 hintText: "Phone"),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
                             style: TextStyle(color: Colors.black),
                           ),
                           //height: 40,
@@ -932,6 +1013,7 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtCompanyEmail,
                             decoration: InputDecoration(
                                 prefixIcon:
                                     Image.asset("images/profile/gmail24.png"),
@@ -951,12 +1033,12 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtCompanyUrl,
                             decoration: InputDecoration(
                                 prefixIcon:
                                     Image.asset("images/profile/domain24.png"),
                                 hintText: "Website"),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
                             style: TextStyle(color: Colors.black),
                           ),
                           //height: 40,
@@ -971,32 +1053,12 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
-                            decoration: InputDecoration(
-                                prefixIcon: Image.asset(
-                                    "images/profile/telephoneold24.png"),
-                                hintText: "Phone"),
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          //height: 40,
-                          width: MediaQuery.of(context).size.width - 60,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 0),
-                          margin: EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(255, 255, 255, 0.5),
-                              border: new Border.all(width: 1),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: TextFormField(
+                            controller: txtMap,
                             decoration: InputDecoration(
                                 prefixIcon:
                                     Image.asset("images/profile/google24.png"),
                                 hintText: "Google Map"),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
                             style: TextStyle(color: Colors.black),
                           ),
                           //height: 40,
@@ -1011,13 +1073,13 @@ class _EditProfileState extends State<EditProfile>
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           child: TextFormField(
+                            controller: txtAddress,
                             maxLines: 3,
                             decoration: InputDecoration(
                                 prefixIcon: Image.asset(
                                     "images/profile/placeholder24.png"),
                                 hintText: "Address"),
                             keyboardType: TextInputType.text,
-                            obscureText: true,
                             style: TextStyle(color: Colors.black),
                           ),
                           //height: 40,
@@ -1034,11 +1096,28 @@ class _EditProfileState extends State<EditProfile>
       ),
     ));
   }
+}
 
-  @override
-  userImage(File _image) {
-    setState(() {
-      this._image = _image;
-    });
-  }
+void _coverImagePopup(context){
+  showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc){
+        return Container(
+          child: new Wrap(
+            children: <Widget>[
+              new ListTile(
+                  leading: new Icon(Icons.camera_alt),
+                  title: new Text('Camera'),
+                  onTap: () => {}
+              ),
+              new ListTile(
+                leading: new Icon(Icons.photo),
+                title: new Text('Gallery'),
+                onTap: () => {},
+              ),
+            ],
+          ),
+        );
+      }
+  );
 }
