@@ -73,7 +73,7 @@ class More extends StatelessWidget {
                             ],
                           )),
                     ),
-                    GestureDetector(
+                    /*GestureDetector(
                       onTap: () =>
                           Navigator.pushNamed(context, "/PhoneContact"),
                       child: Container(
@@ -96,7 +96,7 @@ class More extends StatelessWidget {
                               ),
                             ],
                           )),
-                    ),
+                    ),*/
                     GestureDetector(
                       onTap: () async {
                         SharedPreferences prefs =

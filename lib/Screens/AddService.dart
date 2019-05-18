@@ -111,7 +111,7 @@ class _AddServiceState extends State<AddService>{
                           controller: txtTitle,
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.title), hintText: "Title"),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           style: TextStyle(color: Colors.black),
                         ),
                         //height: 40,

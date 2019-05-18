@@ -30,7 +30,7 @@ class OfferComponent extends StatelessWidget {
                       fontWeight: FontWeight.w600,color: cnst.appcolor)),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: Text('${offerClass.Descri.substring(0,65)}...',
+                    child: Text('${offerClass.Descri.length > 65 ? offerClass.Descri.substring(0,65) : offerClass.Descri}...',
                         style: TextStyle(fontSize: 13,fontWeight: FontWeight.w600,color: Colors.grey[600])),
                   ),
                 ],

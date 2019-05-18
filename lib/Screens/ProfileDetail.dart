@@ -1,13 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:digitalcard/Component/HeaderComponent.dart';
-import 'package:digitalcard/Component/ImagePickerHandlerComponent.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digitalcard/Common/ClassList.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileDetail extends StatefulWidget {
   @override
@@ -16,9 +17,13 @@ class ProfileDetail extends StatefulWidget {
 
 class _ProfileDetailState extends State<ProfileDetail>
     with TickerProviderStateMixin {
-  File _image;
-  AnimationController _controller;
-  ImagePickerHandler imagePicker;
+  File _imageCover;
+  bool _editCoverImg = false;
+
+  File _imageProfile;
+  bool _editProfileImg = false;
+
+  ImageListener _listener;
   String MemberId = "";
 
   bool showProfileEdit = false;
@@ -83,12 +88,6 @@ class _ProfileDetailState extends State<ProfileDetail>
         date.month.toString() +
         '-' +
         date.day.toString();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   GetProfileData() {
@@ -189,50 +188,104 @@ class _ProfileDetailState extends State<ProfileDetail>
                 children: <Widget>[
                   Stack(
                     children: <Widget>[
-                      memberdata.CoverImage != null
-                          ? Image.network(memberdata.CoverImage,
-                              height: 230,
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.cover)
-                          : Image.asset("images/profilebg.jpg",
+                      _imageCover == null
+                          ? memberdata.CoverImage != null
+                              ? Image.network(memberdata.CoverImage,
+                                  height: 230,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover)
+                              : Image.asset("images/profilebg.jpg",
+                                  height: 230,
+                                  width: MediaQuery.of(context).size.width,
+                                  fit: BoxFit.cover)
+                          : Image.file(File(_imageCover.path),
                               height: 230,
                               width: MediaQuery.of(context).size.width,
                               fit: BoxFit.cover),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 0, top: 50),
                         child: new Center(
-                          child: memberdata.Image != null
-                              ? ClipOval(
-                                  child: Image.network(memberdata.Image,
+                          child: _imageProfile == null
+                              ? memberdata.Image != null
+                                  ? ClipOval(
+                                      child: Image.network(memberdata.Image,
+                                          height: 100.0,
+                                          width: 100.0,
+                                          fit: BoxFit.fill),
+                                    )
+                                  : Image.asset(
+                                      "images/user.png",
                                       height: 100.0,
                                       width: 100.0,
-                                      fit: BoxFit.fill),
-                                )
-                              : Image.asset(
-                                  "images/user.png",
-                                  height: 100.0,
-                                  width: 100.0,
+                                    )
+                              : ClipOval(
+                                  child: Image.file(File(_imageProfile.path),
+                                      height: 100,
+                                      width: 100,
+                                      fit: BoxFit.cover),
                                 ),
                         ),
                       ),
                       Container(
-                        height: 230,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Container(
-                                width: MediaQuery.of(context).size.width,
-                                color: Color.fromRGBO(0, 0, 0, 0.4),
-                                height: 50,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    MaterialButton(
-                                      onPressed: (){
-                                        _coverImagePopup(context);
+                          width: MediaQuery.of(context).size.width,
+                          color: Color.fromRGBO(0, 0, 0, 0.4),
+                          margin: EdgeInsets.only(top: 180),
+                          height: 50,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              _editProfileImg
+                                  ? Container(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                                  30) /
+                                              2,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          GestureDetector(
+                                              child: Icon(Icons.done_outline,
+                                                  color: Colors.white),
+                                              onTap: () async {
+                                                String img = '';
+
+                                                if (_imageProfile != null) {
+                                                  List<int> imageBytes =
+                                                      await _imageProfile
+                                                          .readAsBytesSync();
+                                                  String base64Image =
+                                                      base64Encode(imageBytes);
+                                                  img = base64Image;
+                                                }
+
+                                                updateProfile('Image', img)
+                                                    .then((val) {
+                                                  setState(() {
+                                                    _editProfileImg = false;
+                                                  });
+                                                }, onError: (e) {
+                                                  setState(() {
+                                                    _editProfileImg = false;
+                                                  });
+                                                });
+                                              }),
+                                          GestureDetector(
+                                              child: Icon(Icons.close,
+                                                  color: Colors.white),
+                                              onTap: () async {
+                                                setState(() {
+                                                  _editProfileImg = false;
+                                                  _imageProfile = null;
+                                                });
+                                              })
+                                        ],
+                                      ),
+                                    )
+                                  : MaterialButton(
+                                      onPressed: () {
+                                        _profileImagePopup(context);
                                       },
                                       child: Text(
                                         "Edit Photo",
@@ -246,16 +299,66 @@ class _ProfileDetailState extends State<ProfileDetail>
                                                   30) /
                                               2,
                                     ),
-                                    Container(
-                                      height: 30,
-                                      width: 3,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(Radius.circular(10))
+                              //Divider
+                              Container(
+                                height: 30,
+                                width: 3,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                              ),
+                              //Divider End
+                              _editCoverImg
+                                  ? Container(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                                  30) /
+                                              2,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          GestureDetector(
+                                              child: Icon(Icons.done_outline,
+                                                  color: Colors.white),
+                                              onTap: () async {
+                                                String img = '';
+
+                                                if (_imageCover != null) {
+                                                  List<int> imageBytes =
+                                                  await _imageCover
+                                                      .readAsBytesSync();
+                                                  String base64Image =
+                                                  base64Encode(imageBytes);
+                                                  img = base64Image;
+                                                }
+
+                                                updateProfile('CoverImage', img).then(
+                                                        (val) {
+                                                      setState(() {
+                                                        _editCoverImg = false;
+                                                      });
+                                                    }, onError: (e) {
+                                                  setState(() {
+                                                    _editCoverImg = false;
+                                                  });
+                                                });
+                                              }),
+                                          GestureDetector(
+                                              child: Icon(Icons.close,
+                                                  color: Colors.white),
+                                              onTap: () async {
+                                                setState(() {
+                                                  _editCoverImg = false;
+                                                  _imageCover = null;
+                                                });
+                                              })
+                                        ],
                                       ),
-                                    ),
-                                    MaterialButton(
-                                      onPressed: (){
+                                    )
+                                  : MaterialButton(
+                                      onPressed: () {
                                         _coverImagePopup(context);
                                       },
                                       child: Text(
@@ -266,23 +369,21 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             fontWeight: FontWeight.w600),
                                       ),
                                       minWidth:
-                                      (MediaQuery.of(context).size.width -
-                                          30) /
-                                          2,
+                                          (MediaQuery.of(context).size.width -
+                                                  30) /
+                                              2,
                                     )
-                                  ],
-                                ))
-                          ],
-                        ),
-                      )
+                            ],
+                          ))
                     ],
                   ),
                   // Profile View
                   AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 10,left: 10,right: 10),
+                    margin: EdgeInsets.only(top: 10, left: 10, right: 10),
                     decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         border:
                             Border.all(color: Colors.grey[600], width: 0.5)),
@@ -1824,8 +1925,10 @@ class _ProfileDetailState extends State<ProfileDetail>
                   AnimatedContainer(
                     duration: Duration(milliseconds: 500),
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 10,left: 10,right: 10, bottom: 20),
+                    margin: EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 20),
                     decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         border:
                             Border.all(color: Colors.grey[600], width: 0.5)),
@@ -2612,26 +2715,82 @@ class _ProfileDetailState extends State<ProfileDetail>
       ),
     ));
   }
-}
 
-void _coverImagePopup(context) {
-  showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return Container(
-          child: new Wrap(
-            children: <Widget>[
-              new ListTile(
-                  leading: new Icon(Icons.camera_alt),
-                  title: new Text('Camera'),
-                  onTap: () => {}),
-              new ListTile(
-                leading: new Icon(Icons.photo),
-                title: new Text('Gallery'),
-                onTap: () => {},
-              ),
-            ],
-          ),
-        );
-      });
+  void _coverImagePopup(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.camera_alt),
+                    title: new Text('Camera'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                          source: ImageSource.camera);
+                      if (image != null)
+                        setState(() {
+                          _imageCover = image;
+                          _editCoverImg = true;
+                        });
+                      Navigator.pop(context);
+                    }),
+                new ListTile(
+                    leading: new Icon(Icons.photo),
+                    title: new Text('Gallery'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                          source: ImageSource.gallery);
+                      if (image != null)
+                        setState(() {
+                          _imageCover = image;
+                          _editCoverImg = true;
+                        });
+                      Navigator.pop(context);
+                    }),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _profileImagePopup(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.camera_alt),
+                    title: new Text('Camera'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                          source: ImageSource.camera);
+                      if (image != null)
+                        setState(() {
+                          _imageProfile = image;
+                          _editProfileImg = true;
+                        });
+                      Navigator.pop(context);
+                    }),
+                new ListTile(
+                    leading: new Icon(Icons.photo),
+                    title: new Text('Gallery'),
+                    onTap: () async {
+                      var image = await ImagePicker.pickImage(
+                          source: ImageSource.gallery);
+                      if (image != null)
+                        setState(() {
+                          _imageProfile = image;
+                          _editProfileImg = true;
+                        });
+                      Navigator.pop(context);
+                    }),
+              ],
+            ),
+          );
+        });
+  }
 }

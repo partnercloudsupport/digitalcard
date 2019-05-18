@@ -126,8 +126,10 @@ class Services {
           ServicesDataClass servicesDataClass =
               new ServicesDataClass.fromJson(jsonResponse);
 
-          if (servicesDataClass.ERROR_STATUS == false)
+          if (servicesDataClass.ERROR_STATUS == false && servicesDataClass.Data.length > 0)
             list = servicesDataClass.Data;
+          else
+            list = null;
           //}
 
           return list;
@@ -159,10 +161,10 @@ class Services {
           OfferDataClass offerDataClass =
               new OfferDataClass.fromJson(jsonResponse);
 
-          if (offerDataClass.ERROR_STATUS == false)
+          if (offerDataClass.ERROR_STATUS == false && offerDataClass.Data.length > 0)
             list = offerDataClass.Data;
           else
-            list = [];
+            list = null;
 
           return list;
         } else {
@@ -189,10 +191,10 @@ class Services {
         OfferInterestedDataClass offerInterestedDataClass =
             new OfferInterestedDataClass.fromJson(jsonResponse);
 
-        if (offerInterestedDataClass.ERROR_STATUS == false)
+        if (offerInterestedDataClass.ERROR_STATUS == false && offerInterestedDataClass.Data.length > 0)
           list = offerInterestedDataClass.Data;
         else
-          list = [];
+          list = null;
 
         return list;
       } else {
@@ -219,10 +221,10 @@ class Services {
           EarnHistoryDataClass earnHistoryDataClass =
               new EarnHistoryDataClass.fromJson(jsonResponse);
 
-          if (earnHistoryDataClass.ERROR_STATUS == false)
+          if (earnHistoryDataClass.ERROR_STATUS == false && earnHistoryDataClass.Data.length > 0)
             list = earnHistoryDataClass.Data;
           else
-            list = [];
+            list = null;
 
           return list;
         } else {
@@ -285,10 +287,10 @@ class Services {
           ShareDataClass shareDataClass =
               new ShareDataClass.fromJson(jsonResponse);
 
-          if (shareDataClass.ERROR_STATUS == false)
+          if (shareDataClass.ERROR_STATUS == false && shareDataClass.Data.length > 0)
             list = shareDataClass.Data;
           else
-            list = [];
+            list = null;
 
           return list;
         } else {
