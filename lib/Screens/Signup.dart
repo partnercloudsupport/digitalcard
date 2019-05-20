@@ -99,7 +99,7 @@ class _SignupState extends State<Signup>
               msg: "Data Saved",
               backgroundColor: Colors.green,
               gravity: ToastGravity.TOP);
-          Navigator.pushReplacementNamed(context, '/Login');
+          Navigator.pushReplacementNamed(context, '/MobileLogin');
         } else {
           Fluttertoast.showToast(
               msg: "Data Not Saved" + data.MESSAGE,
@@ -319,7 +319,7 @@ class _SignupState extends State<Signup>
                   child: Column(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 20,right: 20),
+                        margin: EdgeInsets.only(top: 20,right: 20,bottom: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -327,7 +327,7 @@ class _SignupState extends State<Signup>
                                 style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600,color: cnst.buttoncolor)),
                             GestureDetector(
                               onTap: (){
-                                Navigator.pushNamed(context, "/Login");
+                                Navigator.pushNamed(context, "/MobileLogin");
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10),

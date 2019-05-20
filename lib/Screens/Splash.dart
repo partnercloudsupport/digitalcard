@@ -23,7 +23,7 @@ class _SplashState extends State<Splash> {
         Navigator.pushReplacementNamed(context, '/Dashboard');
       else {
         if (IsAppIntroCompleted != null && IsAppIntroCompleted == true)
-          Navigator.pushReplacementNamed(context, '/Login');
+          Navigator.pushReplacementNamed(context, '/MobileLogin');
         else
           Navigator.pushReplacementNamed(context, '/AppIntro');
       }

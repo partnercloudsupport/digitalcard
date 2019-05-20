@@ -4,6 +4,7 @@ import 'package:digitalcard/Common/Constants.dart' as cnst;
 //Screens
 import 'package:digitalcard/Screens/Splash.dart';
 import 'package:digitalcard/Screens/Login.dart';
+import 'package:digitalcard/Screens/MobileLogin.dart';
 import 'package:digitalcard/Screens/Dashboard.dart';
 import 'package:digitalcard/Screens/More.dart';
 //import 'package:digitalcard/Screens/OfferDetail.dart';
@@ -19,6 +20,8 @@ import 'package:digitalcard/Screens/AddService.dart';
 import 'package:digitalcard/Screens/EditProfile.dart';
 import 'package:digitalcard/Screens/ProfileDetail.dart';
 import 'package:digitalcard/Screens/AppIntro.dart';
+//Flare Login
+import 'package:digitalcard/Screens/FlareLogin/FlareLogin.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,6 +50,8 @@ class MyApp extends StatelessWidget {
         '/AddService': (context) => AddService(),
         '/EditProfile': (context) => EditProfile(),
         '/ProfileDetail': (context) => ProfileDetail(),
+        '/FlareLogin': (context) => FlareLogin(),
+        '/MobileLogin': (context) => MobileLogin(),
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',

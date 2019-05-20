@@ -21,6 +21,7 @@ dependencies:
   flutter_cupertino_date_picker: ^0.3.0
   intro_views_flutter: ^2.6.0
   shared_preferences: ^0.5.2
+  flare_flutter: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,8 @@ flutter:
   - images/profile/role24.png
   - images/profile/google24.png
   - images/profile/placeholder24.png
+  #flare
+  - assets/Teddy.flr
 
   fonts:
   - family: Montserrat

@@ -105,7 +105,7 @@ class More extends StatelessWidget {
                         prefs.remove(cnst.Session.Name);
                         prefs.remove(cnst.Session.Mobile);
                         prefs.remove(cnst.Session.Company);
-                        Navigator.pushNamed(context, "/Login");
+                        Navigator.pushNamed(context, "/MobileLogin");
                       },
                       child: Container(
                           decoration: BoxDecoration(

@@ -63,7 +63,7 @@ class AppIntro extends StatelessWidget {
           onTapDoneButton: () async{
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool(cnst.Session.IsAppIntroCompleted, true);
-            Navigator.pushNamed(context, "/Login");
+            Navigator.pushNamed(context, "/MobileLogin");
           },
           pageButtonTextStyles: TextStyle(
             color: Colors.white,
