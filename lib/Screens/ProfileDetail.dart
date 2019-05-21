@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digitalcard/Common/ClassList.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:digitalcard/Component/LoadinComponent.dart';
 
 class ProfileDetail extends StatefulWidget {
   @override
@@ -47,6 +48,7 @@ class _ProfileDetailState extends State<ProfileDetail>
   TextEditingController txtIntagram = new TextEditingController();
   TextEditingController txtImage = new TextEditingController();
   TextEditingController txtCoverImage = new TextEditingController();
+  TextEditingController txtPersonalPAN = new TextEditingController();
 
   TextEditingController txtCompany = new TextEditingController();
   TextEditingController txtRole = new TextEditingController();
@@ -55,6 +57,9 @@ class _ProfileDetailState extends State<ProfileDetail>
   TextEditingController txtPhone = new TextEditingController();
   TextEditingController txtCompanyEmail = new TextEditingController();
   TextEditingController txtMap = new TextEditingController();
+  TextEditingController txtAboutCompany = new TextEditingController();
+  TextEditingController txtGstNo = new TextEditingController();
+  TextEditingController txtCompanyPAN = new TextEditingController();
 
   DateTime date = new DateTime.now();
 
@@ -63,6 +68,7 @@ class _ProfileDetailState extends State<ProfileDetail>
   bool editEmail = false;
   bool editWeb = false;
   bool editWhatsapp = false;
+  bool editPersonalPan = false;
   bool editFacebook = false;
   bool editTwitter = false;
   bool editGoogle = false;
@@ -76,6 +82,9 @@ class _ProfileDetailState extends State<ProfileDetail>
   bool editCompanyEmail = false;
   bool editCompanyUrl = false;
   bool editCompanyAddress = false;
+  bool editCompanyPan = false;
+  bool editCompanyGst = false;
+  bool editCompanyAbout = false;
 
   bool isLoading = false;
 
@@ -113,6 +122,7 @@ class _ProfileDetailState extends State<ProfileDetail>
     txtYoutube.text = memberdata.Youtube;
     txtIntagram.text = memberdata.Instagram;
     txtAbout.text = memberdata.About;
+    txtPersonalPAN.text = memberdata.PersonalPAN;
 
     //Company Data
     txtCompany.text = memberdata.Company;
@@ -121,6 +131,10 @@ class _ProfileDetailState extends State<ProfileDetail>
     txtCompanyEmail.text = memberdata.CompanyEmail;
     txtCompanyUrl.text = memberdata.CompanyUrl;
     txtAddress.text = memberdata.CompanyAddress;
+    txtGstNo.text = memberdata.GstNo;
+    txtCompanyPAN.text = memberdata.CompanyPAN;
+    txtAboutCompany.text = memberdata.AboutCompany;
+
     setState(() {
       MemberId = memberdata.Id;
     });
@@ -190,7 +204,9 @@ class _ProfileDetailState extends State<ProfileDetail>
                     children: <Widget>[
                       _imageCover == null
                           ? memberdata.CoverImage != null
-                              ? Image.network(memberdata.CoverImage,
+                              ? FadeInImage.assetNetwork(
+                                  placeholder: "images/profilebg.jpg",
+                                  image: memberdata.CoverImage,
                                   height: 230,
                                   width: MediaQuery.of(context).size.width,
                                   fit: BoxFit.cover)
@@ -208,13 +224,15 @@ class _ProfileDetailState extends State<ProfileDetail>
                           child: _imageProfile == null
                               ? memberdata.Image != null
                                   ? ClipOval(
-                                      child: Image.network(memberdata.Image,
-                                          height: 100.0,
-                                          width: 100.0,
-                                          fit: BoxFit.fill),
+                                      child: FadeInImage.assetNetwork(
+                                          placeholder: "images/users.png",
+                                          image: memberdata.Image,
+                                          height: 100,
+                                          width: 100,
+                                          fit: BoxFit.cover),
                                     )
                                   : Image.asset(
-                                      "images/user.png",
+                                      "images/users.png",
                                       height: 100.0,
                                       width: 100.0,
                                     )
@@ -327,19 +345,19 @@ class _ProfileDetailState extends State<ProfileDetail>
 
                                                 if (_imageCover != null) {
                                                   List<int> imageBytes =
-                                                  await _imageCover
-                                                      .readAsBytesSync();
+                                                      await _imageCover
+                                                          .readAsBytesSync();
                                                   String base64Image =
-                                                  base64Encode(imageBytes);
+                                                      base64Encode(imageBytes);
                                                   img = base64Image;
                                                 }
 
-                                                updateProfile('CoverImage', img).then(
-                                                        (val) {
-                                                      setState(() {
-                                                        _editCoverImg = false;
-                                                      });
-                                                    }, onError: (e) {
+                                                updateProfile('CoverImage', img)
+                                                    .then((val) {
+                                                  setState(() {
+                                                    _editCoverImg = false;
+                                                  });
+                                                }, onError: (e) {
                                                   setState(() {
                                                     _editCoverImg = false;
                                                   });
@@ -1011,6 +1029,129 @@ class _ProfileDetailState extends State<ProfileDetail>
                             ),
                           ),
 
+                          //PAN
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: AnimatedSize(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              vsync: this,
+                              child: !editPersonalPan
+                                  ? Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        80,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                            "images/profile/pan.png"),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10),
+                                          child: Text(
+                                              memberdata.PersonalPAN !=
+                                                  null
+                                                  ? memberdata.PersonalPAN
+                                                  : "",
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                  FontWeight.w600)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          editPersonalPan = true;
+                                        });
+                                      },
+                                      child: Icon(Icons.edit))
+                                ],
+                              )
+                                  : Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        150,
+                                    //margin: EdgeInsets.only(top: 20),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(
+                                            255, 255, 255, 0.5),
+                                        border: new Border.all(width: 1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: TextFormField(
+                                      controller: txtPersonalPAN,
+                                      decoration: InputDecoration(
+                                          prefixIcon: Image.asset(
+                                              "images/profile/pan.png"),
+                                          hintText: "PAN No"),
+                                      keyboardType: TextInputType.text,
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                    //height: 40,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (txtPersonalPAN.text != "") {
+                                            updateProfile('PersonalPAN',
+                                                txtPersonalPAN.text)
+                                                .then((val) {
+                                              memberdata.PersonalPAN =
+                                                  txtPersonalPAN.text;
+                                              setState(() {
+                                                editPersonalPan = false;
+                                              });
+                                            }, onError: (e) {
+                                              txtPersonalPAN.text =
+                                                  memberdata.PersonalPAN;
+                                              setState(() {
+                                                editPersonalPan = false;
+                                              });
+                                            });
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                "Please Enter Data First",
+                                                toastLength:
+                                                Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor:
+                                                Colors.yellow,
+                                                textColor: Colors.black,
+                                                fontSize: 15.0);
+                                          }
+                                        },
+                                        child: Icon(Icons.done_outline)),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        txtPersonalPAN.text =
+                                            memberdata.PersonalPAN;
+                                        setState(() {
+                                          editPersonalPan = false;
+                                        });
+                                      },
+                                      child: Icon(Icons.close))
+                                ],
+                              ),
+                            ),
+                          ),
+
                           //Facebook
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -1086,7 +1227,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/facebook24.png"),
-                                                hintText: "Facebook"),
+                                                hintText: "Facebook Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -1216,7 +1357,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/twitter24.png"),
-                                                hintText: "Twitter"),
+                                                hintText: "Twitter Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -1346,7 +1487,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/googleplus24.png"),
-                                                hintText: "Google"),
+                                                hintText: "Google Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -1477,7 +1618,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/linkedin24.png"),
-                                                hintText: "Linkedin"),
+                                                hintText: "Linkedin Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -1607,7 +1748,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/youtube24.png"),
-                                                hintText: "Youtube"),
+                                                hintText: "Youtube Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -1741,7 +1882,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/social/instagram24.png"),
-                                                hintText: "Instagram"),
+                                                hintText: "Instagram Page"),
                                             keyboardType: TextInputType.url,
                                             style:
                                                 TextStyle(color: Colors.black),
@@ -2324,6 +2465,252 @@ class _ProfileDetailState extends State<ProfileDetail>
                             ),
                           ),
 
+                          //PAN
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: AnimatedSize(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              vsync: this,
+                              child: !editCompanyPan
+                                  ? Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        80,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                            "images/profile/pan.png"),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10),
+                                          child: Text(
+                                              memberdata.CompanyPAN !=
+                                                  null
+                                                  ? memberdata.CompanyPAN
+                                                  : "",
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                  FontWeight.w600)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          editCompanyPan = true;
+                                        });
+                                      },
+                                      child: Icon(Icons.edit))
+                                ],
+                              )
+                                  : Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        150,
+                                    //margin: EdgeInsets.only(top: 20),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(
+                                            255, 255, 255, 0.5),
+                                        border: new Border.all(width: 1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: TextFormField(
+                                      controller: txtCompanyPAN,
+                                      decoration: InputDecoration(
+                                          prefixIcon: Image.asset(
+                                              "images/profile/pan.png"),
+                                          hintText: "PAN No"),
+                                      keyboardType: TextInputType.text,
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                    //height: 40,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (txtCompanyPAN.text != "") {
+                                            updateProfile('CompanyPAN',
+                                                txtCompanyPAN.text)
+                                                .then((val) {
+                                              memberdata.CompanyPAN =
+                                                  txtCompanyPAN.text;
+                                              setState(() {
+                                                editCompanyPan = false;
+                                              });
+                                            }, onError: (e) {
+                                              txtCompanyPAN.text =
+                                                  memberdata.CompanyPAN;
+                                              setState(() {
+                                                editCompanyPan = false;
+                                              });
+                                            });
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                "Please Enter Data First",
+                                                toastLength:
+                                                Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor:
+                                                Colors.yellow,
+                                                textColor: Colors.black,
+                                                fontSize: 15.0);
+                                          }
+                                        },
+                                        child: Icon(Icons.done_outline)),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        txtCompanyPAN.text =
+                                            memberdata.CompanyPAN;
+                                        setState(() {
+                                          editCompanyPan = false;
+                                        });
+                                      },
+                                      child: Icon(Icons.close))
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          //GST
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: AnimatedSize(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              vsync: this,
+                              child: !editCompanyGst
+                                  ? Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        80,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                            "images/profile/gst.png",height: 24,width: 24),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10),
+                                          child: Text(
+                                              memberdata.GstNo !=
+                                                  null
+                                                  ? memberdata.GstNo
+                                                  : "",
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                  FontWeight.w600)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          editCompanyGst = true;
+                                        });
+                                      },
+                                      child: Icon(Icons.edit))
+                                ],
+                              )
+                                  : Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        150,
+                                    //margin: EdgeInsets.only(top: 20),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(
+                                            255, 255, 255, 0.5),
+                                        border: new Border.all(width: 1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: TextFormField(
+                                      controller: txtGstNo,
+                                      decoration: InputDecoration(
+                                          prefixIcon: Image.asset(
+                                              "images/profile/gst.png",height: 10,width: 10),
+                                          hintText: "GST No"),
+                                      keyboardType: TextInputType.text,
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                    //height: 40,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (txtGstNo.text != "") {
+                                            updateProfile('GstNo',
+                                                txtGstNo.text)
+                                                .then((val) {
+                                              memberdata.GstNo =
+                                                  txtGstNo.text;
+                                              setState(() {
+                                                editCompanyGst = false;
+                                              });
+                                            }, onError: (e) {
+                                              txtGstNo.text =
+                                                  memberdata.GstNo;
+                                              setState(() {
+                                                editCompanyGst = false;
+                                              });
+                                            });
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                "Please Enter Data First",
+                                                toastLength:
+                                                Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor:
+                                                Colors.yellow,
+                                                textColor: Colors.black,
+                                                fontSize: 15.0);
+                                          }
+                                        },
+                                        child: Icon(Icons.done_outline)),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        txtGstNo.text =
+                                            memberdata.GstNo;
+                                        setState(() {
+                                          editCompanyGst = false;
+                                        });
+                                      },
+                                      child: Icon(Icons.close))
+                                ],
+                              ),
+                            ),
+                          ),
+
                           //Company Email
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -2395,7 +2782,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             decoration: InputDecoration(
                                                 prefixIcon: Image.asset(
                                                     "images/profile/gmail24.png"),
-                                                hintText: "Gmail"),
+                                                hintText: "mail"),
                                             keyboardType:
                                                 TextInputType.emailAddress,
                                             style:
@@ -2582,126 +2969,249 @@ class _ProfileDetailState extends State<ProfileDetail>
                           ),
 
                           //Comapny Address
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: AnimatedSize(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              vsync: this,
+                              child: !editCompanyAddress
+                                  ? Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width -
+                                                  80,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Image.asset(
+                                                  "images/profile/google24.png"),
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10),
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    110,
+                                                child: Text(
+                                                    memberdata.CompanyAddress !=
+                                                            null
+                                                        ? memberdata
+                                                            .CompanyAddress
+                                                        : "",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[600],
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w600)),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                editCompanyAddress = true;
+                                              });
+                                            },
+                                            child: Icon(Icons.edit))
+                                      ],
+                                    )
+                                  : Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width -
+                                                  150,
+                                          //margin: EdgeInsets.only(top: 20),
+                                          decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 0.5),
+                                              border: new Border.all(width: 1),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5))),
+                                          child: TextFormField(
+                                            maxLines: 5,
+                                            controller: txtAddress,
+                                            decoration: InputDecoration(
+                                                prefixIcon: Image.asset(
+                                                    "images/profile/google24.png"),
+                                                hintText: "Address"),
+                                            keyboardType: TextInputType.text,
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                          //height: 40,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                if (txtAddress.text != "") {
+                                                  updateProfile('CompanyAddress',
+                                                          txtAddress.text)
+                                                      .then((val) {
+                                                    memberdata.CompanyAddress =
+                                                        txtAddress.text;
+                                                    setState(() {
+                                                      editCompanyAddress = false;
+                                                    });
+                                                  }, onError: (e) {
+                                                    txtAddress.text =
+                                                        memberdata.CompanyAddress;
+                                                    setState(() {
+                                                      editCompanyAddress = false;
+                                                    });
+                                                  });
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          "Please Enter Data First",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity: ToastGravity.TOP,
+                                                      backgroundColor:
+                                                          Colors.yellow,
+                                                      textColor: Colors.black,
+                                                      fontSize: 15.0);
+                                                }
+                                              },
+                                              child: Icon(Icons.done_outline)),
+                                        ),
+                                        GestureDetector(
+                                            onTap: () {
+                                              txtAddress.text =
+                                                  memberdata.CompanyAddress;
+                                              setState(() {
+                                                editCompanyAddress = false;
+                                              });
+                                            },
+                                            child: Icon(Icons.close))
+                                      ],
+                                    ),
+                            ),
+                          ),
+
+                          //About
                           AnimatedSize(
                             duration: Duration(milliseconds: 250),
                             curve: Curves.easeInOut,
                             vsync: this,
-                            child: !editCompanyAddress
+                            child: !editCompanyAbout
                                 ? Row(
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                  MediaQuery.of(context).size.width -
+                                      80,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: <Widget>[
+                                      Image.asset(
+                                          "images/profile/negotiation24.png"),
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                80,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                                "images/profile/google24.png"),
-                                            Container(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  110,
-                                              child: Text(
-                                                  memberdata.CompanyAddress !=
-                                                          null
-                                                      ? memberdata
-                                                          .CompanyAddress
-                                                      : "",
-                                                  style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600)),
-                                            ),
-                                          ],
-                                        ),
+                                        padding: const EdgeInsets.only(
+                                            left: 10),
+                                        width: MediaQuery.of(context)
+                                            .size
+                                            .width -
+                                            110,
+                                        child: Text(
+                                            memberdata.AboutCompany != null
+                                                ? memberdata.AboutCompany
+                                                : "",
+                                            style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 15,
+                                                fontWeight:
+                                                FontWeight.w600)),
                                       ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              editCompanyAddress = true;
-                                            });
-                                          },
-                                          child: Icon(Icons.edit))
-                                    ],
-                                  )
-                                : Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                150,
-                                        //margin: EdgeInsets.only(top: 20),
-                                        decoration: BoxDecoration(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.5),
-                                            border: new Border.all(width: 1),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5))),
-                                        child: TextFormField(
-                                          maxLines: 5,
-                                          controller: txtAddress,
-                                          decoration: InputDecoration(
-                                              prefixIcon: Image.asset(
-                                                  "images/profile/google24.png"),
-                                              hintText: "Address"),
-                                          keyboardType: TextInputType.text,
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        //height: 40,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20),
-                                        child: GestureDetector(
-                                            onTap: () {
-                                              if (txtAddress.text != "") {
-                                                updateProfile('CompanyAddress',
-                                                        txtAddress.text)
-                                                    .then((val) {
-                                                  memberdata.CompanyAddress =
-                                                      txtAddress.text;
-                                                  setState(() {
-                                                    editCompanyAddress = false;
-                                                  });
-                                                }, onError: (e) {
-                                                  txtAddress.text =
-                                                      memberdata.CompanyAddress;
-                                                  setState(() {
-                                                    editCompanyAddress = false;
-                                                  });
-                                                });
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "Please Enter Data First",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity: ToastGravity.TOP,
-                                                    backgroundColor:
-                                                        Colors.yellow,
-                                                    textColor: Colors.black,
-                                                    fontSize: 15.0);
-                                              }
-                                            },
-                                            child: Icon(Icons.done_outline)),
-                                      ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            txtAddress.text =
-                                                memberdata.CompanyAddress;
-                                            setState(() {
-                                              editCompanyAddress = false;
-                                            });
-                                          },
-                                          child: Icon(Icons.close))
                                     ],
                                   ),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        editCompanyAbout = true;
+                                      });
+                                    },
+                                    child: Icon(Icons.edit))
+                              ],
+                            )
+                                : Row(
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                  MediaQuery.of(context).size.width -
+                                      150,
+                                  //margin: EdgeInsets.only(top: 20),
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(
+                                          255, 255, 255, 0.5),
+                                      border: new Border.all(width: 1),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5))),
+                                  child: TextFormField(
+                                    controller: txtAboutCompany,
+                                    maxLines: 3,
+                                    decoration: InputDecoration(
+                                        prefixIcon: Image.asset(
+                                            "images/profile/negotiation24.png"),
+                                        hintText: "About Company"),
+                                    keyboardType: TextInputType.text,
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  //height: 40,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        if (txtAboutCompany.text != "") {
+                                          updateProfile(
+                                              'AboutCompany', txtAboutCompany.text)
+                                              .then((val) {
+                                            memberdata.AboutCompany =
+                                                txtAboutCompany.text;
+                                            setState(() {
+                                              editCompanyAbout = false;
+                                            });
+                                          }, onError: (e) {
+                                            txtAboutCompany.text =
+                                                memberdata.AboutCompany;
+                                            setState(() {
+                                              editCompanyAbout = false;
+                                            });
+                                          });
+                                        } else {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                              "Please Enter Data First",
+                                              toastLength:
+                                              Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.TOP,
+                                              backgroundColor:
+                                              Colors.yellow,
+                                              textColor: Colors.black,
+                                              fontSize: 15.0);
+                                        }
+                                      },
+                                      child: Icon(Icons.done_outline)),
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      txtAboutCompany.text = memberdata.AboutCompany;
+                                      setState(() {
+                                        editCompanyAbout = false;
+                                      });
+                                    },
+                                    child: Icon(Icons.close))
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -2710,7 +3220,8 @@ class _ProfileDetailState extends State<ProfileDetail>
                 ],
               ),
             ),
-          )
+          ),
+          isLoading ? LoadinComponent() : Container()
         ],
       ),
     ));

@@ -79,6 +79,7 @@ class DashboardCountDataClass {
             .toList());
   }
 }
+
 class DashboardCountClass {
   String visitors;
   String share;
@@ -286,6 +287,10 @@ class MemberClass {
   String ExpDate;
   String MemberType;
   String RegistrationPoints;
+  String PersonalPAN;
+  String CompanyPAN;
+  String GstNo;
+  String AboutCompany;
 
   MemberClass(
       {this.Id,
@@ -315,7 +320,11 @@ class MemberClass {
       this.JoinDate,
       this.ExpDate,
       this.MemberType,
-      this.RegistrationPoints});
+      this.RegistrationPoints,
+      this.PersonalPAN,
+      this.CompanyPAN,
+      this.GstNo,
+      this.AboutCompany});
 
   factory MemberClass.fromJson(Map<String, dynamic> json) {
     return MemberClass(
@@ -347,6 +356,10 @@ class MemberClass {
       ExpDate: json['ExpDate'] as String,
       MemberType: json['MemberType'] as String,
       RegistrationPoints: json['RegistrationPoints'] as String,
+      PersonalPAN: json['PersonalPAN'] as String,
+      CompanyPAN: json['CompanyPAN'] as String,
+      GstNo: json['GstNo'] as String,
+      AboutCompany: json['AboutCompany'] as String,
     );
   }
 }
@@ -510,10 +523,10 @@ class EarnRedeemCountDataClass {
 
   EarnRedeemCountDataClass(
       {this.MESSAGE,
-        this.ORIGINAL_ERROR,
-        this.ERROR_STATUS,
-        this.RECORDS,
-        this.Data});
+      this.ORIGINAL_ERROR,
+      this.ERROR_STATUS,
+      this.RECORDS,
+      this.Data});
 
   factory EarnRedeemCountDataClass.fromJson(Map<String, dynamic> json) {
     return EarnRedeemCountDataClass(
@@ -527,6 +540,7 @@ class EarnRedeemCountDataClass {
             .toList());
   }
 }
+
 class EarnRedeemCountClass {
   String EarnCount;
   String RedeemCount;

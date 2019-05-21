@@ -266,7 +266,7 @@ class _InviteFriendsState extends State<InviteFriends> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Text(
-                                        "Your friend get prooduct from us",
+                                        "Your friend get product from us",
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w600,

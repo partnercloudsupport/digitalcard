@@ -4,6 +4,7 @@ import 'package:digitalcard/Component/CardShareComponent.dart';
 import 'package:digitalcard/Common/ClassList.dart';
 import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share/share.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,18 +16,23 @@ class _HomeState extends State<Home> {
       new DashboardCountClass(visitors: '0', calls: '0', share: '0');
 
   bool isLoading = false;
+  bool isLoadingProfile = false;
+
   String MemberId = "";
   String Name = "";
   String Company = "";
+  String Photo = "";
+  String CoverPhoto = "";
+  String ReferCode = "";
 
   @override
   void initState() {
     super.initState();
-    GetLocalData();
+    GetProfileData();
     GetDashboardCount();
   }
 
-  GetLocalData() async {
+  /*GetLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String memberId = prefs.getString(cnst.Session.MemberId);
     String name = prefs.getString(cnst.Session.Name);
@@ -45,7 +51,7 @@ class _HomeState extends State<Home> {
         Company = company;
       });
   }
-
+*/
   showMsg(String msg) {
     showDialog(
       context: context,
@@ -68,19 +74,44 @@ class _HomeState extends State<Home> {
     );
   }
 
+  GetProfileData() {
+    setState(() {
+      isLoadingProfile = true;
+    });
+    Services.GetMemberDetail().then((data) {
+      setState(() {
+        MemberId = data[0].Id;
+        Name = data[0].Name;
+        Company = data[0].Company;
+        Photo = data[0].Image;
+        CoverPhoto = data[0].CoverImage;
+        ReferCode = data[0].MyReferralCode;
+        isLoadingProfile = false;
+      });
+    }, onError: (e) {
+      setState(() {
+        isLoadingProfile = false;
+      });
+    });
+  }
+
   GetDashboardCount() async {
     setState(() {
       isLoading = true;
     });
-    List<DashboardCountClass> _dashboardCountList =
-        await Services.GetDashboardCount();
-    if (_dashboardCountList != null && _dashboardCountList.length > 0) {
+    Services.GetDashboardCount().then((val) {
+      if (val != null && val.length > 0) {
+        setState(() {
+          _dashboardCount = val[0];
+        });
+      }
       setState(() {
-        _dashboardCount = _dashboardCountList[0];
+        isLoading = false;
       });
-    }
-    setState(() {
-      isLoading = false;
+    }, onError: (e) {
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -93,50 +124,86 @@ class _HomeState extends State<Home> {
         child: Stack(
           children: <Widget>[
             ClipPath(
-              child: Image.asset(
-                "images/profilebg.jpg",
-                height: 300,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-              ),
+              child: FadeInImage.assetNetwork(
+                  placeholder: "images/profilebg.jpg",
+                  image: CoverPhoto,
+                  height: MediaQuery.of(context).size.height * 0.40,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover),
               clipper: MyClipper(),
             ),
             Container(
               padding: EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 210),
+              margin: EdgeInsets.only(
+                  top: (MediaQuery.of(context).size.height * 0.40) - 80),
               color: Colors.transparent,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    child: Image.asset("images/users.png",
-                        height: 100, width: 100),
+                    child: ClipOval(
+                      child: FadeInImage.assetNetwork(
+                          placeholder: "images/users.png",
+                          image: Photo,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover),
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+
+                  !isLoadingProfile ?
+                  Column(
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(top: 10, right: 20),
+                          padding: EdgeInsets.only(top: 10),
                           child: Text(Name,
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.grey[800],
                                   fontWeight: FontWeight.w600))),
+                      Padding(
+                          padding: EdgeInsets.only(top: 5, bottom: 0),
+                          child: Text(Company,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w600))),
                       GestureDetector(
-                        onTap: () =>
-                            Navigator.pushNamed(context, "/ProfileDetail"),
-                        child: Icon(Icons.edit),
-                      )
+                        onTap: () => Navigator.pushNamed(context, "/ProfileDetail"),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15, bottom: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Edit Profile",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w600)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Icon(Icons.edit, color: Colors.blue),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
+                  ) : Container(
+                    height: 100,
+                    width: 100,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                        AlwaysStoppedAnimation<Color>(
+                            Colors.blue),
+                        strokeWidth: 3,
+                      ),
+                    ),
                   ),
-                  Padding(
-                      padding: EdgeInsets.only(top: 5, bottom: 20),
-                      child: Text(Company,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600))),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -155,12 +222,18 @@ class _HomeState extends State<Home> {
                                           fontSize: 20,
                                           color: cnst.appcolor,
                                           fontWeight: FontWeight.w600))
-                                  : CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
+                                  : SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                        strokeWidth: 3,
+                                      ),
                                     ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 5),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: Text("Visitors",
                                     style: TextStyle(
                                         fontSize: 15,
@@ -175,39 +248,48 @@ class _HomeState extends State<Home> {
                           width: 100,
                         ),
                       ),
-                      Card(
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            side: BorderSide(
-                                width: 0.5, color: Colors.grey[900])),
-                        child: Container(
-                          child: Column(
-                            children: <Widget>[
-                              !isLoading
-                                  ? Text(_dashboardCount.share,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/ShareHistory'),
+                        child: Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              side: BorderSide(
+                                  width: 0.5, color: Colors.grey[900])),
+                          child: Container(
+                            child: Column(
+                              children: <Widget>[
+                                !isLoading
+                                    ? Text(_dashboardCount.share,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: cnst.appcolor,
+                                            fontWeight: FontWeight.w600))
+                                    : SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.blue),
+                                          strokeWidth: 3,
+                                        ),
+                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text("Share",
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          color: cnst.appcolor,
-                                          fontWeight: FontWeight.w600))
-                                  : CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
-                                    ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text("Share",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: cnst.buttoncolor,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                                          fontSize: 15,
+                                          color: cnst.buttoncolor,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                            ),
+                            height: 100,
+                            width: 100,
                           ),
-                          height: 100,
-                          width: 100,
                         ),
                       ),
                       Card(
@@ -225,12 +307,18 @@ class _HomeState extends State<Home> {
                                           fontSize: 20,
                                           color: cnst.appcolor,
                                           fontWeight: FontWeight.w600))
-                                  : CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
+                                  : SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.blue),
+                                        strokeWidth: 3,
+                                      ),
                                     ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 5),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: Text("Calls",
                                     style: TextStyle(
                                         fontSize: 15,
@@ -250,41 +338,77 @@ class _HomeState extends State<Home> {
                   Padding(
                     padding: EdgeInsets.only(top: 20),
                   ),
-                  SizedBox(
-                    width: 180,
-                    child: RaisedButton(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        elevation: 5,
-                        textColor: Colors.white,
-                        color: cnst.buttoncolor,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.share,
-                              color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            elevation: 5,
+                            textColor: Colors.white,
+                            color: cnst.buttoncolor,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.share,
+                                  color: Colors.white,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text("Share",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15)),
+                                )
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text("Share Now",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15)),
-                            )
-                          ],
-                        ),
-                        onPressed: () {
-                          /*showMsg(
-                              'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
-                          Navigator.of(context).push(PageRouteBuilder(
-                              opaque: false,
-                              pageBuilder: (BuildContext context, _, __) =>
-                                  CardShareComponent(
-                                      memberId: MemberId, memberName: Name)));
-                        },
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0))),
+                            onPressed: () {
+                              /*showMsg(
+                                  'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
+                              Navigator.of(context).push(PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (BuildContext context, _, __) =>
+                                      CardShareComponent(
+                                          memberId: MemberId, memberName: Name)));
+                            },
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0))),
+                      ),
+                      SizedBox(
+                        width: 120,
+                        child: RaisedButton(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            elevation: 5,
+                            textColor: Colors.white,
+                            color: cnst.buttoncolor,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset("images/logo.png",height: 24,width: 24),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text("Refer",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15)),
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              String withrefercode = cnst.inviteFriMsg
+                                  .replaceAll("#refercode", ReferCode);
+                              String withappurl = withrefercode.replaceAll(
+                                  "#appurl", cnst.playstoreUrl);
+                              Share.share(withappurl);
+                            },
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0))),
+                      )
+                    ],
                   )
                 ],
               ),

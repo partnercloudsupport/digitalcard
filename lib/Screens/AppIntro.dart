@@ -9,29 +9,30 @@ class AppIntro extends StatelessWidget {
     PageViewModel(
         pageColor: const Color(0xFF03A9F4),
         // iconImageAssetPath: 'assets/air-hostess.png',
-        bubble: Image.network('https://cdn4.iconfinder.com/data/icons/professions-1-2/151/6-512.png'),
+        bubble: Image.asset('images/logo.png'),
         body: Text(
-          'Haselfree  booking  of  flight  tickets  with  full  refund  on  cancelation',
+          'Create your Own Digital Business Card It takes just 5 minutes to create your own business card.',
+          style: TextStyle(fontSize: 20),
         ),
-        title: Text(
-          'Flights',
-        ),
+        title: Text(''),
+        /*title: Text( 'Create Digital Card', style: TextStyle(fontSize: 20)),*/
         textStyle: TextStyle(fontFamily: 'MyFont', color: Colors.white),
-        mainImage: Image.network(
-          'https://banner2.kisspng.com/20180406/tie/kisspng-airplane-aircraft-maintenance-flight-transport-aeroplane-5ac7b14f05e3e0.1254718215230364950241.jpg',
+        mainImage: Image.asset( 'images/logo.png',
           height: 285.0,
           width: 285.0,
           alignment: Alignment.center,
         )),
     PageViewModel(
       pageColor: const Color(0xFF8BC34A),
-      bubble: Image.network('https://purepng.com/public/uploads/large/purepng.com-waiterwaiterrestaurant-workerbar-servefood-drink-supplies-1421526977617tegly.png'),
+      bubble: Image.asset('images/savetophone.png'),
       body: Text(
-        'We  work  for  the  comfort ,  enjoy  your  stay  at  our  beautiful  hotels',
+        'Save to Your Device in the form of App or Link It is accessible anytime from anywhere.',
+        style: TextStyle(fontSize: 20),
       ),
-      title: Text('Hotels'),
-      mainImage: Image.network(
-        'https://purepng.com/public/uploads/large/purepng.com-waiterwaiterrestaurant-workerbar-servefood-drink-supplies-1421526977617tegly.png',
+      title: Text(''),
+      /*title: Text('Save To Phone',style: TextStyle(fontSize: 20),),*/
+      mainImage: Image.asset(
+        'images/savetophone.png',
         height: 285.0,
         width: 285.0,
         alignment: Alignment.center,
@@ -40,13 +41,15 @@ class AppIntro extends StatelessWidget {
     ),
     PageViewModel(
       pageColor: const Color(0xFF607D8B),
-      iconImageAssetPath: 'assets/taxi-driver.png',
+      bubble: Image.asset("images/introappshare.png"),
       body: Text(
-        'Easy  cab  booking  at  your  doorstep  with  cashless  payment  system',
+        'Share with friends, colleagues & clients through a variety of channels.',
+        style: TextStyle(fontSize: 20),
       ),
-      title: Text('Cabs'),
+      title: Text(''),
+      /*title: Text('Share',style: TextStyle(fontSize: 20),),*/
       mainImage: Image.asset(
-        'assets/taxi.png',
+        'images/introappshare.png',
         height: 285.0,
         width: 285.0,
         alignment: Alignment.center,

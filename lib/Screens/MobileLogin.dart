@@ -28,7 +28,7 @@ class _MobileLoginState extends State<MobileLogin> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(93, 142, 155, 1.0),
+      //backgroundColor: cnst.appcolor,
       body: Container(
           child: Stack(
             children: <Widget>[
@@ -41,10 +41,11 @@ class _MobileLoginState extends State<MobileLogin> {
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
                         // Add one stop for each color. Stops should increase from 0 to 1
-                        stops: [0.0, 1.0],
+                        //stops: [0.0, 1.0],
                         colors: [
-                          Color.fromRGBO(170, 207, 211, 1.0),
-                          Color.fromRGBO(93, 142, 155, 1.0),
+                          cnst.appcolor,
+                          Color.fromRGBO(0, 121, 214,1),
+                          Color.fromRGBO(0, 75, 147,1)
                         ],
                       ),
                     ),
@@ -57,6 +58,13 @@ class _MobileLoginState extends State<MobileLogin> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          Container(
+                           child: Text("Digital Card",
+                               style: TextStyle(
+                                   fontSize: 20,
+                                   fontWeight: FontWeight.w600,
+                                   color: Colors.white)),
+                          ),
                           Container(
                               height: 200,
                               padding: const EdgeInsets.only(left: 30.0, right:30.0),
@@ -110,7 +118,7 @@ class _MobileLoginState extends State<MobileLogin> {
                                       style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white)),
+                                          color: Color.fromRGBO(170, 207, 212, 1.0))),
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(context, "/Signup");
@@ -119,7 +127,7 @@ class _MobileLoginState extends State<MobileLogin> {
                                       padding: const EdgeInsets.only(top: 5),
                                       child: Text("Signup Now",
                                           style: TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 18,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white)),
                                     ),

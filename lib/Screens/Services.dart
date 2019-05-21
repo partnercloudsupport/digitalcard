@@ -25,7 +25,7 @@ class _MemberServicesState extends State<MemberServices> {
           child: Stack(
             children: <Widget>[
               HeaderComponent(
-                title: "MemberServices",
+                title: "Services",
                 image: "images/header/servicehearde.jpg",
                 boxheight: 150,
               ),

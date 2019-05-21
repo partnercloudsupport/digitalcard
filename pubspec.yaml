@@ -22,6 +22,7 @@ dependencies:
   intro_views_flutter: ^2.6.0
   shared_preferences: ^0.5.2
   flare_flutter: ^1.5.0
+  location: ^2.3.5
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,8 @@ flutter:
   - images/wallet.png
   - images/idcard.png
   - images/nooffer.jpg
+  - images/introappshare.png
+  - images/savetophone.png
   #social
   - images/social/mail.png
   - images/social/chat.png
@@ -78,6 +81,8 @@ flutter:
   - images/profile/role24.png
   - images/profile/google24.png
   - images/profile/placeholder24.png
+  - images/profile/pan.png
+  - images/profile/gst.png
   #flare
   - assets/Teddy.flr
 
