@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
@@ -10,6 +11,9 @@ import 'package:digitalcard/Common/ClassList.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:digitalcard/Component/LoadinComponent.dart';
+import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:geocoder/geocoder.dart';
 
 class ProfileDetail extends StatefulWidget {
   @override
@@ -18,6 +22,8 @@ class ProfileDetail extends StatefulWidget {
 
 class _ProfileDetailState extends State<ProfileDetail>
     with TickerProviderStateMixin {
+  var location = new Location();
+
   File _imageCover;
   bool _editCoverImg = false;
 
@@ -82,6 +88,7 @@ class _ProfileDetailState extends State<ProfileDetail>
   bool editCompanyEmail = false;
   bool editCompanyUrl = false;
   bool editCompanyAddress = false;
+  bool editCompanyMap = false;
   bool editCompanyPan = false;
   bool editCompanyGst = false;
   bool editCompanyAbout = false;
@@ -134,6 +141,7 @@ class _ProfileDetailState extends State<ProfileDetail>
     txtGstNo.text = memberdata.GstNo;
     txtCompanyPAN.text = memberdata.CompanyPAN;
     txtAboutCompany.text = memberdata.AboutCompany;
+    txtMap.text = memberdata.GMap;
 
     setState(() {
       MemberId = memberdata.Id;
@@ -2711,6 +2719,165 @@ class _ProfileDetailState extends State<ProfileDetail>
                             ),
                           ),
 
+                          //MAP
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: AnimatedSize(
+                              duration: Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              vsync: this,
+                              child: !editCompanyMap
+                                  ? Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        80,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                            "images/profile/mapRoute24.png",height: 24,width: 24),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10),
+                                          child: GestureDetector(
+                                            onTap: (){
+                                              String url = 'google.navigation:q=${txtMap.text}';
+                                              print('Map Url : $url');
+                                              launch(url);
+                                            },
+                                            child: Text(
+                                                memberdata.GMap !=
+                                                    null
+                                                    ? memberdata.GMap
+                                                    : "",
+                                                style: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                    FontWeight.w600)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          editCompanyMap = true;
+                                        });
+                                      },
+                                      child: Icon(Icons.edit))
+                                ],
+                              )
+                                  : Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: MediaQuery.of(context)
+                                        .size
+                                        .width -
+                                        180,
+                                    //margin: EdgeInsets.only(top: 20),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(
+                                            255, 255, 255, 0.5),
+                                        border: new Border.all(width: 1),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: TextFormField(
+                                      controller: txtMap,
+                                      maxLines: 2,
+                                      decoration: InputDecoration(
+                                          prefixIcon: Image.asset(
+                                              "images/profile/mapRoute24.png",height: 24,width: 24),
+                                          hintText: "Map Location"),
+                                      keyboardType: TextInputType.text,
+                                      style:
+                                      TextStyle(color: Colors.black),
+                                    ),
+                                    //height: 40,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: GestureDetector(
+                                        onTap: () async{
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+                                          try {
+                                            location.getLocation().then((val){
+                                              if(val != null) {
+                                                txtMap.text = val.latitude.toString() + ',' + val.longitude.toString();
+                                              }
+                                              setState(() {
+                                                isLoading = false;
+                                              });
+                                            });
+                                          } on PlatformException catch (e) {
+                                            if (e.code == 'PERMISSION_DENIED') {
+                                              print('Permission denied');
+                                            }
+                                            setState(() {
+                                              isLoading = false;
+                                            });
+                                          }
+                                        },
+                                        child: Image.asset(
+                                            "images/profile/google24.png")),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          if (txtMap.text != "") {
+                                            updateProfile('Map',
+                                                txtMap.text)
+                                                .then((val) {
+                                              memberdata.GMap =
+                                                  txtMap.text;
+                                              setState(() {
+                                                editCompanyMap = false;
+                                              });
+                                            }, onError: (e) {
+                                              txtMap.text =
+                                                  memberdata.GMap;
+                                              setState(() {
+                                                editCompanyMap = false;
+                                              });
+                                            });
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                "Please Enter Data First",
+                                                toastLength:
+                                                Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.TOP,
+                                                backgroundColor:
+                                                Colors.yellow,
+                                                textColor: Colors.black,
+                                                fontSize: 15.0);
+                                          }
+                                        },
+                                        child: Icon(Icons.done_outline)),
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        txtMap.text =
+                                            memberdata.GMap;
+                                        setState(() {
+                                          editCompanyMap = false;
+                                        });
+                                      },
+                                      child: Icon(Icons.close))
+                                ],
+                              ),
+                            ),
+                          ),
+
                           //Company Email
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
@@ -3024,7 +3191,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                         Container(
                                           width:
                                               MediaQuery.of(context).size.width -
-                                                  150,
+                                                  180,
                                           //margin: EdgeInsets.only(top: 20),
                                           decoration: BoxDecoration(
                                               color: Color.fromRGBO(
@@ -3043,6 +3210,41 @@ class _ProfileDetailState extends State<ProfileDetail>
                                             style: TextStyle(color: Colors.black),
                                           ),
                                           //height: 40,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 15),
+                                          child: GestureDetector(
+                                              onTap: (){
+                                                try {
+                                                  setState(() {
+                                                    isLoading = true;
+                                                  });
+                                                  location.getLocation().then((val){
+                                                    if(val != null) {
+                                                      final coordinates = new Coordinates(val.latitude, val.longitude);
+                                                      Geocoder.local.findAddressesFromCoordinates(coordinates).then((addresses){
+                                                        if(addresses != null){
+                                                          var first = addresses.first;
+                                                          print("Address : ${first.featureName} : ${first.addressLine}");
+                                                          txtAddress.text = first.addressLine.toString();
+                                                        }
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                      });
+                                                    }
+                                                  });
+                                                } on PlatformException catch (e) {
+                                                  if (e.code == 'PERMISSION_DENIED') {
+                                                    print('Permission denied');
+                                                  }
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                }
+                                              },
+                                              child: Image.asset(
+                                                  "images/profile/google24.png")),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(

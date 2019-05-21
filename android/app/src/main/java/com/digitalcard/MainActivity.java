@@ -1,4 +1,4 @@
-package com.digitalcard;
+package com.itfuturz.digitalcard;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
