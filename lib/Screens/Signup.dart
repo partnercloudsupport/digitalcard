@@ -200,11 +200,12 @@ class _SignupState extends State<Signup>
                         ),
                         child: TextFormField(
                           controller: txtMobile,
+                          maxLength: 10,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.phone_android),
                               hintText: "Mobile"
                           ),
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.phone,
                           style: TextStyle(color: Colors.black),
                         ),
                         //height: 40,
@@ -270,7 +271,7 @@ class _SignupState extends State<Signup>
                         //height: 40,
                         width: MediaQuery.of(context).size.width - 60,
                       ),
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: GestureDetector(
                           onTap: () => imagePicker.showDialog(context),
@@ -281,21 +282,16 @@ class _SignupState extends State<Signup>
                                 : new Container(
                               height: 100.0,
                               width: 100.0,
-                              decoration: new BoxDecoration(
-                                color: const Color(0xff7c94b6),
-                                image: new DecorationImage(
-                                  image: new ExactAssetImage(_image.path),
-                                  fit: BoxFit.cover,
-                                ),
-                                border:
-                                Border.all(color: cnst.buttoncolor, width: 2.0),
-                                borderRadius:
-                                new BorderRadius.all(const Radius.circular(60.0)),
+                              child: ClipOval(
+                                child: Image.file(File(_image.path),
+                                    height: 230,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      )*/
                       Container(
                         width: MediaQuery.of(context).size.width - 100,
                         margin: EdgeInsets.only(top: 20),

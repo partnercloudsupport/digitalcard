@@ -5,6 +5,7 @@ import 'package:digitalcard/Common/ClassList.dart';
 import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -24,12 +25,29 @@ class _HomeState extends State<Home> {
   String Photo = "";
   String CoverPhoto = "";
   String ReferCode = "";
+  String ExpDate = "";
 
   @override
   void initState() {
     super.initState();
     GetProfileData();
     GetDashboardCount();
+    
+  }
+
+  bool checkValidity(){
+    if(ExpDate.trim() != null && ExpDate.trim() != "") {
+      final f = new DateFormat('dd MMM yyyy');
+      DateTime validTillDate = f.parse(ExpDate);
+      print(validTillDate);
+      DateTime currentDate = new DateTime.now();
+      print(currentDate);
+      if(validTillDate.isAfter(currentDate))
+        return true;
+      else
+        return false;
+    }else
+      return false;
   }
 
   /*GetLocalData() async {
@@ -86,6 +104,7 @@ class _HomeState extends State<Home> {
         Photo = data[0].Image;
         CoverPhoto = data[0].CoverImage;
         ReferCode = data[0].MyReferralCode;
+        ExpDate = data[0].ExpDate;
         isLoadingProfile = false;
       });
     }, onError: (e) {
@@ -366,13 +385,16 @@ class _HomeState extends State<Home> {
                               ],
                             ),
                             onPressed: () {
-                              /*showMsg(
-                                  'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
+                              bool val = checkValidity();
+                              if(val != null && val == true)
                               Navigator.of(context).push(PageRouteBuilder(
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
                                           memberId: MemberId, memberName: Name)));
+                              else
+                                showMsg(
+                                    'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');
                             },
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0))),

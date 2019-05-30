@@ -170,7 +170,7 @@ class TeddyController extends FlareControls {
               textColor: Colors.white,
               fontSize: 15.0);
           Timer(Duration(seconds: 2), () async {
-            Navigator.pushNamed(context, '/Dashboard');
+            Navigator.pushReplacementNamed(context, '/Dashboard');
           });
         }
         else

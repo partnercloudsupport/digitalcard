@@ -94,7 +94,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
     url = url.replaceAll("#id", widget.memberId);
 
     //Replace static string with recever
-    String urlwithrecever = shareMessage.replaceAll("#recever", txtName.text);
+    String urlwithrecever = shareMessage.replaceAll("#recever", txtName.text.trim());
 
     //Replace static string with Sender
     String urlwithsender =
@@ -107,11 +107,17 @@ class _CardShareComponentState extends State<CardShareComponent> {
     return urlwithprofilelink;
   }
 
-  SaveShare() async {
+  SaveShare(String val,bool isurl) async {
+
+    if(isurl == true)
+      launch(val);
+    else
+      Share.share(val);
+
     var data = {
       'type': 'share',
-      'name': txtName.text,
-      'mobile': txtMobile.text,
+      'name': txtName.text.trim(),
+      'mobile': txtMobile.text.trim(),
       'memberid': widget.memberId.toString(),
     };
 
@@ -184,21 +190,20 @@ class _CardShareComponentState extends State<CardShareComponent> {
                           children: <Widget>[
                             MaterialButton(
                               onPressed: () {
-                                if (txtName.text != null &&
-                                    txtName.text != "" &&
-                                    txtMobile.text != null &&
-                                    txtMobile.text != "") {
+                                if (txtName.text.trim() != null &&
+                                    txtName.text.trim() != "" &&
+                                    txtMobile.text.trim() != null &&
+                                    txtMobile.text.trim() != "" && txtMobile.text.trim().length == 10) {
                                   String whatsAppLink = cnst.whatsAppLink;
 
                                   String msg = ShareMessage();
 
                                   String urlwithmobile = whatsAppLink.replaceAll(
-                                      "#mobile", "91${txtMobile.text}");
+                                      "#mobile", "91${txtMobile.text.trim()}");
                                   String urlwithmsg =
                                       urlwithmobile.replaceAll("#msg", msg);
 
-                                  launch(urlwithmsg.toString());
-                                  SaveShare();
+                                  SaveShare(urlwithmsg,true);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please fill all details",
@@ -217,21 +222,20 @@ class _CardShareComponentState extends State<CardShareComponent> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                if (txtName.text != null &&
-                                    txtName.text != "" &&
-                                    txtMobile.text != null &&
-                                    txtMobile.text != "") {
+                                if (txtName.text.trim() != null &&
+                                    txtName.text.trim() != "" &&
+                                    txtMobile.text.trim() != null &&
+                                    txtMobile.text.trim() != "" && txtMobile.text.trim().length == 10) {
                                   String smsLink = cnst.smsLink;
 
                                   String msg = ShareMessage();
 
                                   String urlwithmobile = smsLink.replaceAll(
-                                      "#mobile", "91${txtMobile.text}");
+                                      "#mobile", "91${txtMobile.text.trim()}");
                                   String urlwithmsg =
                                       urlwithmobile.replaceAll("#msg", msg);
 
-                                  launch(urlwithmsg.toString());
-                                  SaveShare();
+                                  SaveShare(urlwithmsg,true);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please fill all details",
@@ -250,10 +254,10 @@ class _CardShareComponentState extends State<CardShareComponent> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                if (txtName.text != null &&
-                                    txtName.text != "" &&
-                                    txtMobile.text != null &&
-                                    txtMobile.text != "") {
+                                if (txtName.text.trim() != null &&
+                                    txtName.text.trim() != "" &&
+                                    txtMobile.text.trim() != null &&
+                                    txtMobile.text.trim() != "" && txtMobile.text.trim().length == 10) {
                                   String mailLink = cnst.mailLink;
                                   String msg = ShareMessage();
 
@@ -264,8 +268,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   String urlwithmsg =
                                       urlwithsubject.replaceAll("#msg", msg);
 
-                                  launch(urlwithmsg.toString());
-                                  SaveShare();
+                                  SaveShare(urlwithmsg,true);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please fill all details",
@@ -292,10 +295,10 @@ class _CardShareComponentState extends State<CardShareComponent> {
                           children: <Widget>[
                             MaterialButton(
                               onPressed: () async {
-                                if (txtName.text != null &&
-                                    txtName.text != "" &&
-                                    txtMobile.text != null &&
-                                    txtMobile.text != "") {
+                                if (txtName.text.trim() != null &&
+                                    txtName.text.trim() != "" &&
+                                    txtMobile.text.trim() != null &&
+                                    txtMobile.text.trim() != "" && txtMobile.text.trim().length == 10) {
                                   PermissionStatus permissionStatus =
                                       await _getContactPermission();
                                   try {
@@ -303,10 +306,10 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                         PermissionStatus.granted) {
                                       Item item = Item(
                                           label: 'office',
-                                          value: txtMobile.text.toString());
+                                          value: txtMobile.text.trim().toString());
 
                                       Contact newContact = new Contact(
-                                          givenName: txtName.text,
+                                          givenName: txtName.text.trim(),
                                           phones: [item]);
 
                                       await ContactsService.addContact(
@@ -356,13 +359,13 @@ class _CardShareComponentState extends State<CardShareComponent> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                if (txtName.text != null &&
-                                    txtName.text != "" &&
-                                    txtMobile.text != null &&
-                                    txtMobile.text != "") {
+                                if (txtName.text.trim() != null &&
+                                    txtName.text.trim() != "" &&
+                                    txtMobile.text.trim() != null &&
+                                    txtMobile.text.trim() != "" && txtMobile.text.trim().length == 10) {
                                   String msg = ShareMessage();
-                                  Share.share(msg);
-                                  SaveShare();
+
+                                  SaveShare(msg,false);
                                 } else {
                                   Fluttertoast.showToast(
                                       msg: "Please fill all details",
@@ -396,8 +399,8 @@ class _CardShareComponentState extends State<CardShareComponent> {
                       Padding(
                         padding: EdgeInsets.only(top: 50),
                         child: MaterialButton(
-                          onPressed: () {
-                            SaveShare();
+                          onPressed: (){
+                            Navigator.pop(context);
                           },
                           child: Icon(
                             Icons.close,
