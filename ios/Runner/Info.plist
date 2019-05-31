@@ -41,5 +41,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSContactsUsageDescription</key>
+	<string>This app requires contacts access to function properly.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This is called Privacy - Photo Library Usage Description in the visual editor.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This is called Privacy - Camera Usage Description in the visual editor.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This is called Privacy - Microphone Usage Description in the visual editor.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires location access to function properly.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires location access to function properly.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

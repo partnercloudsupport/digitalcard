@@ -97,10 +97,10 @@ class ContactDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(_contact.displayName ?? ""),
         actions: <Widget>[
-          IconButton(
+          /*IconButton(
             icon: Icon(Icons.share),
             onPressed: () => shareVCFCard(context, contact: _contact),
-          ),
+          ),*/
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () => ContactsService.deleteContact(_contact),
