@@ -386,15 +386,15 @@ class _HomeState extends State<Home> {
                             ),
                             onPressed: () {
                               bool val = checkValidity();
-                              if(val != null && val == true)
+                              /*if(val != null && val == true)*/
                               Navigator.of(context).push(PageRouteBuilder(
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
-                                          memberId: MemberId, memberName: Name)));
-                              else
+                                          memberId: MemberId, memberName: Name,isRegular: val,)));
+                              /*else
                                 showMsg(
-                                    'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');
+                                    'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
                             },
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0))),

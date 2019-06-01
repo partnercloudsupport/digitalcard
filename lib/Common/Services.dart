@@ -436,4 +436,23 @@ class Services {
     } else
       return list;
   }
+
+  static Future<SaveDataClass> CardPayment(data) async {
+    String url = APIURL.API_URL + 'MemberPayment';
+    print("CardPayment URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      print(response.body);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("CardPayment Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
 }
