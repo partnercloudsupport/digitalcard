@@ -20,7 +20,8 @@ class _SplashState extends State<Splash> {
           prefs.getBool(cnst.Session.IsAppIntroCompleted);
 
       if (MemberId != null && MemberId != "")
-        Navigator.pushReplacementNamed(context, '/Dashboard');
+        //Navigator.pushReplacementNamed(context, '/Dashboard');
+        Navigator.pushReplacementNamed(context, '/Payment');
       else {
         if (IsAppIntroCompleted != null && IsAppIntroCompleted == true)
           Navigator.pushReplacementNamed(context, '/MobileLogin');

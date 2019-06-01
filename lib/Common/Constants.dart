@@ -22,6 +22,7 @@ class Session{
   static const String Name = "Name";
   static const String Mobile = "Mobile";
   static const String Company = "Company";
+  static const String Email = "Email";
   static const String ReferCode = "ReferCode";
   static const String IsAppIntroCompleted = "IsAppIntroCompleted";
 }

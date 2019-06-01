@@ -16,6 +16,20 @@ class SaveDataClass {
   }
 }
 
+class PaymentDataClass {
+  int code;
+  String message;
+
+  PaymentDataClass(
+      {this.code, this.message});
+
+  factory PaymentDataClass.fromJson(Map<String, dynamic> json) {
+    return PaymentDataClass(
+        code: json['code'] as int,
+        message: json['message'] as String);
+  }
+}
+
 class LoginDataClass {
   String MESSAGE;
   String ORIGINAL_ERROR;

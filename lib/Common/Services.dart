@@ -369,11 +369,9 @@ class Services {
     final response = await http.post(url, body: data);
     try {
       if (response.statusCode == 200) {
-        SaveDataClass data;
         final jsonResponse = json.decode(response.body);
         SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
         return saveDataClass;
-        return data;
       } else {
         throw Exception(MESSAGES.INTERNET_ERROR);
       }

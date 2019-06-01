@@ -130,6 +130,7 @@ class TeddyController extends FlareControls {
           await prefs.setString(cnst.Session.Name, data[0].Name);
           await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
           await prefs.setString(cnst.Session.Company, data[0].Company);
+          await prefs.setString(cnst.Session.Email, data[0].Email);
           await prefs.setString(cnst.Session.ReferCode, data[0].MyReferralCode);
           return true;
         } else {
