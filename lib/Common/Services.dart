@@ -323,6 +323,42 @@ class Services {
     }
   }
 
+  static Future<SaveDataClass> DeleteOffer(data) async {
+    String url = APIURL.API_URL + 'DeleteOffer';
+    print("DeleteOffer URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("DeleteOffer Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<SaveDataClass> UpdateOffer(data) async {
+    String url = APIURL.API_URL + 'UpdateOffer';
+    print("UpdateOffer URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("UpdateOffer Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
   static Future<SaveDataClass> SaveService(data) async {
     String url = APIURL.API_URL + 'AddService';
     print("AddOffer URL: " + url);
@@ -339,6 +375,42 @@ class Services {
       }
     } catch (e) {
       print("SaveTA Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<SaveDataClass> DeleteService(data) async {
+    String url = APIURL.API_URL + 'DeleteService';
+    print("DeleteService URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("DeleteService Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
+  static Future<SaveDataClass> UpdateService(data) async {
+    String url = APIURL.API_URL + 'UpdateService';
+    print("UpdateService URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("UpdateService Erorr : " + e.toString());
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
   }

@@ -15,9 +15,10 @@ class CardShareComponent extends StatefulWidget {
   final String memberId;
   final String memberName;
   final bool isRegular;
+  final String memberType;
 
   const CardShareComponent(
-      {Key key, this.memberId, this.memberName, this.isRegular})
+      {Key key, this.memberId, this.memberName, this.isRegular,this.memberType})
       : super(key: key);
 
   @override
@@ -106,6 +107,9 @@ class _CardShareComponentState extends State<CardShareComponent> {
     //Replace static string with Link
     String urlwithprofilelink =
         urlwithsender.replaceAll("#link", Uri.encodeComponent(url));
+
+    if(widget.memberType == null || widget.memberType.length == 0 || widget.memberType == 'Trial')
+      urlwithprofilelink = urlwithprofilelink + "\nPowered by ITFuturz, \nArpit Shah \n9879208321";
 
     return urlwithprofilelink;
   }

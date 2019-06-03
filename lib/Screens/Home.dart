@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   String CoverPhoto = "";
   String ReferCode = "";
   String ExpDate = "";
+  String MemberType = "";
 
   @override
   void initState() {
@@ -101,10 +102,11 @@ class _HomeState extends State<Home> {
         MemberId = data[0].Id;
         Name = data[0].Name;
         Company = data[0].Company;
-        Photo = data[0].Image;
-        CoverPhoto = data[0].CoverImage;
+        Photo = data[0].Image != null ? data[0].Image : "";
+        CoverPhoto = data[0].CoverImage != null ? data[0].CoverImage : "";
         ReferCode = data[0].MyReferralCode;
         ExpDate = data[0].ExpDate;
+        MemberType = data[0].MemberType;
         isLoadingProfile = false;
       });
     }, onError: (e) {
@@ -391,7 +393,7 @@ class _HomeState extends State<Home> {
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
-                                          memberId: MemberId, memberName: Name,isRegular: val,)));
+                                          memberId: MemberId, memberName: Name,isRegular: val,memberType: MemberType)));
                               /*else
                                 showMsg(
                                     'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/

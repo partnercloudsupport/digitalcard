@@ -18,7 +18,7 @@ class _PaymentState extends State<Payment> {
   String Name = "";
   String Mobile = "";
   String Email = "";
-  String Amount = "100";
+  String Amount = "99900";
   String PaymentStatus = "InProcess";
   String PaymentMessage = "";
   bool isLoading = false;
