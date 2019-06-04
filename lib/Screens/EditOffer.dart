@@ -62,7 +62,7 @@ class _EditOfferState extends State<EditOffer>
     var date = widget.offerClass.Date;
     DateFormat format = new DateFormat("dd MMM yyyy");
     date = format.parse(date).toString();
-    txtDate.text = date.substring(0,10);
+    txtDate.text = date.substring(0, 10);
   }
 
   GetLocalData() async {
@@ -138,152 +138,147 @@ class _EditOfferState extends State<EditOffer>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      child: Stack(
-        children: <Widget>[
-          HeaderComponent(
-            title: "Add Offers",
-            image: "images/header/offerheader.jpg",
-            boxheight: 100,
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height - 100,
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            margin: EdgeInsets.only(top: 110),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 0),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 0.5),
-                        border: new Border.all(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      controller: txtTitle,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.title), hintText: "Title"),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    //height: 40,
-                    width: MediaQuery.of(context).size.width - 40,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: Row(
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            DatePicker.showDatePicker(
-                              context,
-                              showTitleActions: true,
-                              locale: 'en',
-                              minYear: 1970,
-                              maxYear: 2020,
-                              initialYear: DateTime.now().year,
-                              initialMonth: DateTime.now().month,
-                              initialDate: DateTime.now().day,
-                              cancel: Text('cancel'),
-                              confirm: Text('confirm'),
-                              dateFormat: 'dd-mmm-yyyy',
-                              onChanged: (year, month, date) {},
-                              onConfirm: (year, month, date) {
-                                txtDate.text = year.toString() +
-                                    '-' +
-                                    month.toString() +
-                                    '-' +
-                                    date.toString();
-                              },
-                            );
+      appBar: AppBar(
+        title: Text('Edit Offer'),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(20),
+        //margin: EdgeInsets.only(top: 110),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                    border: new Border.all(width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: TextFormField(
+                  controller: txtTitle,
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.title), hintText: "Title"),
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(color: Colors.black),
+                ),
+                //height: 40,
+                width: MediaQuery.of(context).size.width - 40,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        DatePicker.showDatePicker(
+                          context,
+                          showTitleActions: true,
+                          locale: 'en',
+                          minYear: 1970,
+                          maxYear: 2020,
+                          initialYear: DateTime.now().year,
+                          initialMonth: DateTime.now().month,
+                          initialDate: DateTime.now().day,
+                          cancel: Text('cancel'),
+                          confirm: Text('confirm'),
+                          dateFormat: 'dd-mmm-yyyy',
+                          onChanged: (year, month, date) {},
+                          onConfirm: (year, month, date) {
+                            txtDate.text = year.toString() +
+                                '-' +
+                                month.toString() +
+                                '-' +
+                                date.toString();
                           },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 0),
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(255, 255, 255, 0.5),
-                                border: new Border.all(width: 1),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5))),
-                            child: TextFormField(
-                              controller: txtDate,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.calendar_today),
-                                  hintText: "Date"),
-                              keyboardType: TextInputType.number,
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            //height: 40,
-                            width: MediaQuery.of(context).size.width - 80,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              txtDate.text = "";
-                            },
-                            child: Icon(Icons.close)),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 0),
-                    margin: EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 0.5),
-                        border: new Border.all(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      maxLines: 5,
-                      controller: txtDesc,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.description),
-                          hintText: "Description"),
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    //height: 40,
-                    width: MediaQuery.of(context).size.width - 40,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: GestureDetector(
-                      onTap: () => imagePicker.showDialog(context),
-                      child: new Center(
-                        child: _image == null
-                            ? widget.offerClass.Image != null
-                                ? FadeInImage.assetNetwork(
-                                    placeholder: "images/logo.png",
-                                    image: widget.offerClass.Image,
-                                    height: 200,
-                                    width: 200,
-                                    fit: BoxFit.cover)
-                                : Image.asset(
-                                    "images/logo.png",
-                                    height: 200.0,
-                                    width: 200.0,
-                                  )
-                            : Image.file(File(_image.path),
-                                height: 200, width: 200, fit: BoxFit.cover),
-                      ), //end Center
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.only(top: 10),
-                    child: MaterialButton(
-                      color: Colors.deepPurple,
-                      minWidth: MediaQuery.of(context).size.width - 20,
-                      onPressed: () {
-                        if (isLoading == false) this.SaveOffer();
+                        );
                       },
-                      child: setUpButtonChild(),
-                    ) /*RaisedButton(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(255, 255, 255, 0.5),
+                            border: new Border.all(width: 1),
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(5))),
+                        child: TextFormField(
+                          controller: txtDate,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.calendar_today),
+                              hintText: "Date"),
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        //height: 40,
+                        width: MediaQuery.of(context).size.width - 80,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          txtDate.text = "";
+                        },
+                        child: Icon(Icons.close)),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                    border: new Border.all(width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: TextFormField(
+                  maxLines: 5,
+                  controller: txtDesc,
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.description),
+                      hintText: "Description"),
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(color: Colors.black),
+                ),
+                //height: 40,
+                width: MediaQuery.of(context).size.width - 40,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: GestureDetector(
+                  onTap: () => imagePicker.showDialog(context),
+                  child: new Center(
+                    child: _image == null
+                        ? widget.offerClass.Image != null
+                        ? FadeInImage.assetNetwork(
+                        placeholder: "images/logo.png",
+                        image: widget.offerClass.Image,
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.cover)
+                        : Image.asset(
+                      "images/logo.png",
+                      height: 200.0,
+                      width: 200.0,
+                    )
+                        : Image.file(File(_image.path),
+                        height: 200, width: 200, fit: BoxFit.cover),
+                  ), //end Center
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(top: 10),
+                child: MaterialButton(
+                  color: cnst.buttoncolor,
+                  minWidth: MediaQuery.of(context).size.width - 20,
+                  onPressed: () {
+                    if (isLoading == false) this.SaveOffer();
+                  },
+                  child: setUpButtonChild(),
+                ) /*RaisedButton(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         elevation: 5,
                         textColor: Colors.white,
@@ -298,15 +293,13 @@ class _EditOfferState extends State<EditOffer>
                         },
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)))*/
-                    ,
-                  ),
-                ],
+                ,
               ),
-            ),
-          )
-        ],
+            ],
+          ),
+        ),
       ),
-    ));
+    );
   }
 
   @override
@@ -319,7 +312,7 @@ class _EditOfferState extends State<EditOffer>
   Widget setUpButtonChild() {
     if (isLoading == false) {
       return new Text(
-        "Add Offer",
+        "Update Offer",
         style: TextStyle(
             color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600),
       );

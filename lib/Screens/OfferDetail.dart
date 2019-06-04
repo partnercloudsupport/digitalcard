@@ -18,74 +18,68 @@ class _OfferDetailState extends State<OfferDetail> {
   Widget build(BuildContext context) {
     final CardTheme cardTheme = CardTheme.of(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Offer Detail'),
+      ),
       body: Container(
-        //color: Colors.white,
-        child: Stack(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(20),
+        //margin: EdgeInsets.only(top: 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            HeaderComponent(
-              title: "Offer Detail",
-              image: "images/header/offerheader.jpg",
-              boxheight: 150,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height - 160,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              margin: EdgeInsets.only(top: 100),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  (widget.offerClass.Image != null && widget.offerClass.Image != "")
-                      ? Image.network(widget.offerClass.Image,
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.fill)
-                      : Image.asset("images/nooffer.jpg",
-                      height: 200,
-                      width: MediaQuery.of(context).size.width-40,
-                      fit: BoxFit.fill),
-                  Card(
-                    elevation: 3,
-                    margin: EdgeInsets.all(0),
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            (widget.offerClass.Image != null && widget.offerClass.Image != "")
+                ? Image.network(widget.offerClass.Image,
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fill)
+                : Image.asset("images/nooffer.jpg",
+                height: 200,
+                width: MediaQuery.of(context).size.width-40,
+                fit: BoxFit.fill),
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.all(0),
+              child: Container(
+                padding: EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width - 170,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Container(
-                            width: MediaQuery.of(context).size.width - 170,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(widget.offerClass.Title,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: cnst.appcolor)),
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text("Available till :",
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.grey[600])),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 5),
-                                      child: Text(widget.offerClass.ValidTill,
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                              color: cnst.appcolor)),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Text(widget.offerClass.Title,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: cnst.appcolor)),
                           ),
-                          /*MaterialButton(
+                          Row(
+                            children: <Widget>[
+                              Text("Available till :",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[600])),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(widget.offerClass.ValidTill,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: cnst.appcolor)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    /*MaterialButton(
                             onPressed: () {
                               //Navigator.pushNamed(context, "/OfferInterestedMembers");
                               Navigator.push(
@@ -109,24 +103,21 @@ class _OfferDetailState extends State<OfferDetail> {
                               ],
                             ),
                           )*/
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    elevation: 3,
-                    margin: EdgeInsets.only(top: 10),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width - 40,
-                      child: Text(widget.offerClass.Descri,
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[600])),
-                    ),
-                  )
-                ],
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.only(top: 10),
+              child: Container(
+                padding: EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width - 40,
+                child: Text(widget.offerClass.Descri,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[600])),
               ),
             )
           ],

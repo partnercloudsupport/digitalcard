@@ -15,7 +15,6 @@ const String profileUrl = "http://digitalcard.co.in/?uid=#id";
 const String playstoreUrl = "https://urlzs.com/JzR8A";
 const String inviteFriMsg = "http://digitalcard.co.in, smart & simple app to manage your digital visiting card & business profile.\nDownload the app from #appurl and use my refer code “#refercode” to get 15 days free trial.";
 
-
 class Session{
   static const String Session_Login = "Login_Data";
   static const String MemberId = "MemberId";
@@ -38,3 +37,20 @@ class COLORS {
   static const Color DRAWER_BG_COLOR = Colors.lightGreen;
   static const Color APP_THEME_COLOR = Colors.green;
 }
+
+//Material Color
+Map<int, Color> appColorMap =
+{
+  50:Color.fromRGBO(48, 131, 201, .1),
+  100:Color.fromRGBO(48, 131, 201, .2),
+  200:Color.fromRGBO(48, 131, 201, .3),
+  300:Color.fromRGBO(48, 131, 201, .4),
+  400:Color.fromRGBO(48, 131, 201, .5),
+  500:Color.fromRGBO(48, 131, 201, .6),
+  600:Color.fromRGBO(48, 131, 201, .7),
+  700:Color.fromRGBO(48, 131, 201, .8),
+  800:Color.fromRGBO(48, 131, 201, .9),
+  900:Color.fromRGBO(48, 131, 201, 1),
+};
+
+MaterialColor appMaterialColor = MaterialColor(0xFF3083C9, appColorMap);

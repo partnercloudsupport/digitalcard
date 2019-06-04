@@ -56,73 +56,77 @@ class _OfferComponentState extends State<OfferComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return showComponent ? Stack(
-      children: <Widget>[
-        Card(
-          elevation: 2,
-          child: Container(
-            padding: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width - 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    //Navigator.pushNamed(context, "/OfferDetail");
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                OfferDetail(offerClass: widget.offerClass)));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 150,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(widget.offerClass.Title,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: cnst.appcolor)),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Text(
-                                  '${widget.offerClass.Descri.length > 65 ? widget.offerClass.Descri.substring(0, 65) : widget.offerClass.Descri}...',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[600])),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
+    return showComponent
+        ? Stack(
+            children: <Widget>[
+              Card(
+                elevation: 2,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width - 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          //Navigator.pushNamed(context, "/OfferDetail");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OfferDetail(
+                                      offerClass: widget.offerClass)));
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - 150,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text("Available till :",
+                                  Text(widget.offerClass.Title,
                                       style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.grey[600])),
+                                          color: cnst.appcolor)),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 5),
-                                    child: Text(widget.offerClass.ValidTill,
+                                    padding: EdgeInsets.only(top: 10),
+                                    child: Text(
+                                        '${widget.offerClass.Descri.length > 65 ? widget.offerClass.Descri.substring(0, 65) : widget.offerClass.Descri}...',
                                         style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
-                                            color: cnst.appcolor)),
+                                            color: Colors.grey[600])),
                                   ),
                                 ],
                               ),
-                            ),
-                            /*ClipRRect(
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text("Available till :",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey[600])),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Text(
+                                              widget.offerClass.ValidTill,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: cnst.appcolor)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  /*ClipRRect(
                           borderRadius: BorderRadius.circular(30.0),
                           child: MaterialButton(
                             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -133,39 +137,74 @@ class _OfferComponentState extends State<OfferComponent> {
                               style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600)),
                           ),
                         )*/
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditOffer(
+                                        offerClass: widget.offerClass))),
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Icon(Icons.edit),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Delete Confirmation"),
+                                    content: new Text("Are you sure you want to delete this offer?"),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      new FlatButton(
+                                        child: new Text("Ok"),
+                                        onPressed: () {
+                                          DeleteOffer();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      new FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Icon(Icons.delete),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditOffer(offerClass: widget.offerClass))),
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Icon(Icons.edit),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => DeleteOffer(),
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Icon(Icons.delete),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ),
-        Center(
-          child: isLoading ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)) : Container(),
-        )
-      ],
-    ) : Container();
+              ),
+              Center(
+                child: isLoading
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue))
+                    : Container(),
+              )
+            ],
+          )
+        : Container();
   }
 }

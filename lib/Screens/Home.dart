@@ -363,7 +363,7 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       SizedBox(
-                        width: 120,
+                        width: 130,
                         child: RaisedButton(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             elevation: 5,
@@ -402,7 +402,7 @@ class _HomeState extends State<Home> {
                                 borderRadius: new BorderRadius.circular(30.0))),
                       ),
                       SizedBox(
-                        width: 120,
+                        width: 130,
                         child: RaisedButton(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             elevation: 5,

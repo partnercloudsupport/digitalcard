@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        primarySwatch: Colors.lightBlue,
+        primarySwatch: cnst.appMaterialColor,
         accentColor: Colors.blue,
         buttonColor: Color.fromRGBO(145, 194, 41, 1),
       ),
