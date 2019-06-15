@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "779948782308",
+    "firebase_url": "https://digital-card-d5c81.firebaseio.com",
+    "project_id": "digital-card-d5c81",
+    "storage_bucket": "digital-card-d5c81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779948782308:android:d4dc26a453277c78",
+        "android_client_info": {
+          "package_name": "com.itfuturz.digitalcard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779948782308-hg1t7p7e9kl4ionsc7egjaf7aom4d9et.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itfuturz.digitalcard",
+            "certificate_hash": "da657b94eb7108e5b1c037422fc0b4115d729667"
+          }
+        },
+        {
+          "client_id": "779948782308-eq2kqdtqvbbl55og1fr47um6p2eunu18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWFNmJm3dgsxXgJHpeuuoO-eqwZ5XDkFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779948782308-eq2kqdtqvbbl55og1fr47um6p2eunu18.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

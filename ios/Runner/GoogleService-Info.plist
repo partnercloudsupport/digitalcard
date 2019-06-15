@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>779948782308-ibevtvh7j663p57593aar9omlap3v4ml.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.779948782308-ibevtvh7j663p57593aar9omlap3v4ml</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>779948782308-hg1t7p7e9kl4ionsc7egjaf7aom4d9et.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC2RYJhVx5z9eEHlQlFTWvEINDwG5WuUrM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>779948782308</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.itfuturz.digitalcard</string>
+	<key>PROJECT_ID</key>
+	<string>digital-card-d5c81</string>
+	<key>STORAGE_BUCKET</key>
+	<string>digital-card-d5c81.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:779948782308:ios:d4dc26a453277c78</string>
+	<key>DATABASE_URL</key>
+	<string>https://digital-card-d5c81.firebaseio.com</string>
+</dict>
+</plist>
