@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +20,11 @@ class CardShareComponent extends StatefulWidget {
   final String memberType;
 
   const CardShareComponent(
-      {Key key, this.memberId, this.memberName, this.isRegular,this.memberType})
+      {Key key,
+      this.memberId,
+      this.memberName,
+      this.isRegular,
+      this.memberType})
       : super(key: key);
 
   @override
@@ -89,7 +95,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
     }
   }
 
-  String ShareMessage() {
+  String ShareMessage(bool isurl) {
     String shareMessage = cnst.shareMessage;
     String url = cnst.profileUrl;
 
@@ -105,13 +111,44 @@ class _CardShareComponentState extends State<CardShareComponent> {
         urlwithrecever.replaceAll("#sender", widget.memberName);
 
     //Replace static string with Link
-    String urlwithprofilelink =
-        urlwithsender.replaceAll("#link", Uri.encodeComponent(url));
+    String urlwithprofilelink = isurl
+        ? urlwithsender.replaceAll("#link", Uri.encodeComponent(url))
+        : urlwithsender.replaceAll("#link", url);
 
-    if(widget.memberType == null || widget.memberType.length == 0 || widget.memberType == 'Trial')
-      urlwithprofilelink = urlwithprofilelink + "\nPowered by ITFuturz, \nArpit Shah \n9879208321";
+    if (widget.memberType == null ||
+        widget.memberType.length == 0 ||
+        widget.memberType == 'Trial')
+      urlwithprofilelink = urlwithprofilelink +
+          "\nPowered by ITFuturz, \nArpit Shah \n9879208321";
 
     return urlwithprofilelink;
+  }
+
+  String DirectShareMessage() {
+    String shareMessage = cnst.directShareMsg;
+    String url = cnst.profileUrl;
+
+    //Replace static string with userid
+    url = url.replaceAll("#id", widget.memberId);
+
+    //Replace static string with Sender
+    String urlwithsender =
+        shareMessage.replaceAll("#sender", widget.memberName);
+
+    //Replace static string with Link
+    String urlwithprofilelink = urlwithsender.replaceAll("#link", url);
+
+    //Replace static string with Link
+    String urlwithpapplink =
+        urlwithprofilelink.replaceAll("#applink", cnst.playstoreUrl);
+
+    if (widget.memberType == null ||
+        widget.memberType.length == 0 ||
+        widget.memberType == 'Trial')
+      urlwithpapplink =
+          urlwithpapplink + "\nPowered by ITFuturz, \nArpit Shah \n9879208321";
+
+    return urlwithpapplink;
   }
 
   SaveShare(String val, bool isurl) async {
@@ -194,6 +231,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                         const TextStyle(color: Colors.green)),
                               ),
                             ),
+                            Platform.isAndroid ?
                             Padding(
                               padding: EdgeInsets.only(top: 20),
                               child: Row(
@@ -209,11 +247,12 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                           txtMobile.text.trim().length == 10) {
                                         String whatsAppLink = cnst.whatsAppLink;
 
-                                        String msg = ShareMessage();
+                                        String msg = ShareMessage(true);
 
                                         String urlwithmobile =
                                             whatsAppLink.replaceAll("#mobile",
                                                 "91${txtMobile.text.trim()}");
+
                                         String urlwithmsg = urlwithmobile
                                             .replaceAll("#msg", msg);
 
@@ -242,8 +281,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                           txtMobile.text.trim() != "" &&
                                           txtMobile.text.trim().length == 10) {
                                         String smsLink = cnst.smsLink;
-
-                                        String msg = ShareMessage();
+                                        String msg = ShareMessage(true);
 
                                         String urlwithmobile =
                                             smsLink.replaceAll("#mobile",
@@ -276,7 +314,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                           txtMobile.text.trim() != "" &&
                                           txtMobile.text.trim().length == 10) {
                                         String mailLink = cnst.mailLink;
-                                        String msg = ShareMessage();
+                                        String msg = ShareMessage(true);
 
                                         String urlwithmail =
                                             mailLink.replaceAll("#mail", "");
@@ -305,7 +343,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                   ),
                                 ],
                               ),
-                            ),
+                            ) : Container(),
                             Padding(
                               padding: EdgeInsets.only(top: 30),
                               child: Row(
@@ -362,6 +400,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                             toastLength: Toast.LENGTH_SHORT);
                                       }
                                     },
+                                    shape: StadiumBorder(),
                                     color: cnst.appcolor,
                                     child: Row(
                                       children: <Widget>[
@@ -389,8 +428,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                           txtMobile.text.trim() != null &&
                                           txtMobile.text.trim() != "" &&
                                           txtMobile.text.trim().length == 10) {
-                                        String msg = ShareMessage();
-
+                                        String msg = ShareMessage(false);
                                         SaveShare(msg, false);
                                       } else {
                                         Fluttertoast.showToast(
@@ -400,6 +438,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                             toastLength: Toast.LENGTH_SHORT);
                                       }
                                     },
+                                    shape: StadiumBorder(),
                                     color: cnst.appcolor,
                                     child: Row(
                                       children: <Widget>[
@@ -410,7 +449,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(left: 10),
-                                          child: Text("More...",
+                                          child: Text(Platform.isAndroid ? "More..." : "Share",
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w600,
@@ -423,6 +462,49 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                 ],
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: RawMaterialButton(
+                                onPressed: () {
+                                  String msg = DirectShareMessage();
+                                  Share.share(msg);
+                                  Navigator.pop(context);
+                                },
+                                splashColor: cnst.buttoncolor,
+                                animationDuration: Duration(milliseconds: 100),
+                                shape: StadiumBorder(),
+                                elevation: 2,
+                                fillColor: cnst.appcolor,
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Icon(
+                                          Icons.share,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Text(
+                                          "Share to existing Contact",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       )
@@ -432,8 +514,8 @@ class _CardShareComponentState extends State<CardShareComponent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Center(
-                                child: Image.asset('images/addmoney.png',height: 80,width: 80)
-                            ),
+                                child: Image.asset('images/addmoney.png',
+                                    height: 80, width: 80)),
                             Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Text("Your trial is expired!",
@@ -460,10 +542,12 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                               padding: EdgeInsets.all(10),
-                              onPressed: () => Navigator.pushNamed(context, '/Payment'),
+                              onPressed: () =>
+                                  Navigator.pushNamed(context, '/Payment'),
                             ),
                             Padding(
-                                padding: const EdgeInsets.only(top: 10,bottom: 10),
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
                                 child: Text(
                                     "Or contact to digital card team for purchase / renewal.",
                                     style: TextStyle(
@@ -495,7 +579,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                         ),
                       ),
                 Padding(
-                  padding: EdgeInsets.only(top: 50),
+                  padding: EdgeInsets.only(top: 20),
                   child: MaterialButton(
                     onPressed: () {
                       Navigator.pop(context);
