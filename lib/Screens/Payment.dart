@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:digitalcard/Common/Services.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,18 @@ class _PaymentState extends State<Payment> {
   String Name = "";
   String Mobile = "";
   String Email = "";
-  String Amount = "99900";
+  String Amount = "";
+  String OriginalAmount = "";
+  String AmountCopy = "";
+
+  //String Amount = "99900";
   String PaymentStatus = "InProcess";
   String PaymentMessage = "";
   bool isLoading = false;
+  var couponStatus = false;
+  CouponClass couponclass;
+
+  TextEditingController edtCouponCode = new TextEditingController();
 
   @override
   void initState() {
@@ -36,6 +45,17 @@ class _PaymentState extends State<Payment> {
     String name = prefs.getString(cnst.Session.Name);
     String mobile = prefs.getString(cnst.Session.Mobile);
     String email = prefs.getString(cnst.Session.Email);
+    String cardPaymentAmount = prefs.getString(cnst.Session.CardPaymentAmount);
+
+    if (cardPaymentAmount != null && cardPaymentAmount != "") {
+      OriginalAmount = cardPaymentAmount + "00";
+      Amount = cardPaymentAmount + "00";
+      AmountCopy = cardPaymentAmount;
+    } else {
+      OriginalAmount = "99900";
+      Amount = "99900";
+      AmountCopy = "999";
+    }
 
     if (memberId != null && memberId != "")
       setState(() {
@@ -127,6 +147,56 @@ class _PaymentState extends State<Payment> {
     });
   }
 
+  checkCoupon() async {
+    if (edtCouponCode.text != "") {
+      setState(() {
+        isLoading = true;
+      });
+      Services.GetCoupon(edtCouponCode.text).then((val) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        //couponclass = new CouponClass();
+        if (val != null && val.length > 0) {
+          couponclass = val[0];
+          setAmountCalculation();
+        }
+        setState(() {
+          couponStatus = true;
+          isLoading = false;
+        });
+      }, onError: (e) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: "Enter Coupon Code", backgroundColor: Colors.red);
+    }
+  }
+
+  setAmountCalculation() async {
+    int decimals = 0;
+    int fac = pow(10, decimals);
+    String couponType = couponclass.CouponType;
+    double couponAmt = double.parse(couponclass.CouponAmt);
+    double amt = double.parse(AmountCopy);
+    if (couponType.toLowerCase() == "fixed") {
+      amt = amt - couponAmt;
+      setState(() {
+        amt = (amt * fac).round() / fac;
+        Amount = (amt * 100).toStringAsFixed(0);
+      });
+    } else {
+      amt = (amt * fac).round() / fac;
+      double calculateAmt = (amt * couponAmt) / 100;
+      double amt1 = amt - calculateAmt;
+      amt1 = (amt1 * fac).round() / fac;
+      setState(() {
+        Amount = (amt1 * 100).toString();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,8 +286,7 @@ class _PaymentState extends State<Payment> {
                               ),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 20),
+                              padding: const EdgeInsets.only(top: 10),
                               child: Row(
                                 children: <Widget>[
                                   Container(
@@ -227,14 +296,145 @@ class _PaymentState extends State<Payment> {
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.grey.shade600))),
-                                  Text('${int.parse(Amount) / 100}',
+                                  Text('${double.parse(OriginalAmount) / 100}',
                                       style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 17,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.grey.shade600)),
                                 ],
                               ),
                             ),
+                            couponclass != null && couponStatus == true
+                                ? Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10, bottom: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.5,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                        '${couponclass.CouponCode}',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: Colors.grey
+                                                                .shade600)),
+                                                    Text("Applied",
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color:
+                                                                Colors.grey)),
+                                                  ],
+                                                )),
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2.5,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: <Widget>[
+                                                    couponclass.CouponType
+                                                                .toLowerCase() !=
+                                                            "fixed"
+                                                        ? Text(
+                                                            '${couponclass.CouponAmt}%',
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade600))
+                                                        : Text(
+                                                            '${cnst.Inr_Rupee} ${couponclass.CouponAmt}',
+                                                            style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade600)),
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.4,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 0),
+                                    child: TextFormField(
+                                      controller: edtCouponCode,
+                                      keyboardType: TextInputType.text,
+                                      decoration: InputDecoration(
+                                          hintText: 'Enter Coupon Code',
+                                          labelText: 'Enter Coupon Code',
+                                          suffixStyle: const TextStyle(
+                                              color: Colors.green)),
+                                    ),
+                                  ),
+                                ),
+                                MaterialButton(
+                                    color: cnst.appMaterialColor,
+                                    child: Text('Check  Coupon',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    //padding: EdgeInsets.only(t),
+                                    onPressed: () {
+                                      //startPayment();
+                                      checkCoupon();
+                                    }),
+                              ],
+                            ),
+                            couponclass == null && couponStatus == true
+                                ? Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        'Wrong Coupon Code',
+                                        style: TextStyle(
+                                            color: Colors.red, fontSize: 15),
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            Padding(padding: EdgeInsets.only(top: 15)),
+                            Text(
+                              'Amount Payable :  ${double.parse(Amount) / 100}',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade600),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 15)),
                             MaterialButton(
                               minWidth: MediaQuery.of(context).size.width - 80,
                               color: Colors.green,

@@ -88,7 +88,7 @@ class Services {
         if (response.statusCode == 200) {
           final jsonResponse = json.decode(response.body);
           EarnRedeemCountDataClass earnRedeemCountDataClass =
-          new EarnRedeemCountDataClass.fromJson(jsonResponse);
+              new EarnRedeemCountDataClass.fromJson(jsonResponse);
 
           if (earnRedeemCountDataClass.ERROR_STATUS == false)
             list = earnRedeemCountDataClass.Data;
@@ -126,7 +126,8 @@ class Services {
           ServicesDataClass servicesDataClass =
               new ServicesDataClass.fromJson(jsonResponse);
 
-          if (servicesDataClass.ERROR_STATUS == false && servicesDataClass.Data.length > 0)
+          if (servicesDataClass.ERROR_STATUS == false &&
+              servicesDataClass.Data.length > 0)
             list = servicesDataClass.Data;
           else
             list = null;
@@ -161,7 +162,8 @@ class Services {
           OfferDataClass offerDataClass =
               new OfferDataClass.fromJson(jsonResponse);
 
-          if (offerDataClass.ERROR_STATUS == false && offerDataClass.Data.length > 0)
+          if (offerDataClass.ERROR_STATUS == false &&
+              offerDataClass.Data.length > 0)
             list = offerDataClass.Data;
           else
             list = null;
@@ -191,7 +193,8 @@ class Services {
         OfferInterestedDataClass offerInterestedDataClass =
             new OfferInterestedDataClass.fromJson(jsonResponse);
 
-        if (offerInterestedDataClass.ERROR_STATUS == false && offerInterestedDataClass.Data.length > 0)
+        if (offerInterestedDataClass.ERROR_STATUS == false &&
+            offerInterestedDataClass.Data.length > 0)
           list = offerInterestedDataClass.Data;
         else
           list = null;
@@ -221,7 +224,8 @@ class Services {
           EarnHistoryDataClass earnHistoryDataClass =
               new EarnHistoryDataClass.fromJson(jsonResponse);
 
-          if (earnHistoryDataClass.ERROR_STATUS == false && earnHistoryDataClass.Data.length > 0)
+          if (earnHistoryDataClass.ERROR_STATUS == false &&
+              earnHistoryDataClass.Data.length > 0)
             list = earnHistoryDataClass.Data;
           else
             list = null;
@@ -287,7 +291,8 @@ class Services {
           ShareDataClass shareDataClass =
               new ShareDataClass.fromJson(jsonResponse);
 
-          if (shareDataClass.ERROR_STATUS == false && shareDataClass.Data.length > 0)
+          if (shareDataClass.ERROR_STATUS == false &&
+              shareDataClass.Data.length > 0)
             list = shareDataClass.Data;
           else
             list = null;
@@ -480,8 +485,8 @@ class Services {
     List<MemberClass> list = [];
 
     if (memberId != null && memberId != "") {
-      String url =
-          APIURL.API_URL + 'GetMemberDetail?type=memberdetail&memberid=$memberId';
+      String url = APIURL.API_URL +
+          'GetMemberDetail?type=memberdetail&memberid=$memberId';
       print("MemberLogin URL: " + url);
       final response = await http.get(url);
       try {
@@ -490,7 +495,7 @@ class Services {
 
           final jsonResponse = json.decode(response.body);
           MemberDataClass memberDataClass =
-          new MemberDataClass.fromJson(jsonResponse);
+              new MemberDataClass.fromJson(jsonResponse);
 
           if (memberDataClass.ERROR_STATUS == false)
             list = memberDataClass.Data;
@@ -526,5 +531,35 @@ class Services {
       print("CardPayment Erorr : " + e.toString());
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
+  }
+
+  //denish ubhal
+  static Future<List<CouponClass>> GetCoupon(String CouponCode) async {
+    List<CouponClass> list = [];
+
+    String url = APIURL.API_URL + 'getCoupon?type=coupon&couponCode=$CouponCode';
+    print("MemberLogin URL: " + url);
+    final response = await http.get(url);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        CouponDataClass dashboardCountDataClass =
+            new CouponDataClass.fromJson(jsonResponse);
+
+        if (dashboardCountDataClass.ERROR_STATUS == false)
+          list = dashboardCountDataClass.Data;
+        else
+          list = [];
+
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("GetDashboardCount Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+
+    return list;
   }
 }

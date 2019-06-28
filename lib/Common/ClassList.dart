@@ -20,13 +20,11 @@ class PaymentDataClass {
   int code;
   String message;
 
-  PaymentDataClass(
-      {this.code, this.message});
+  PaymentDataClass({this.code, this.message});
 
   factory PaymentDataClass.fromJson(Map<String, dynamic> json) {
     return PaymentDataClass(
-        code: json['code'] as int,
-        message: json['message'] as String);
+        code: json['code'] as int, message: json['message'] as String);
   }
 }
 
@@ -98,14 +96,16 @@ class DashboardCountClass {
   String visitors;
   String share;
   String calls;
+  String cardAmount;
 
-  DashboardCountClass({this.visitors, this.share, this.calls});
+  DashboardCountClass({this.visitors, this.share, this.calls, this.cardAmount});
 
   factory DashboardCountClass.fromJson(Map<String, dynamic> json) {
     return DashboardCountClass(
         visitors: json['visitors'] as String,
         share: json['share'] as String,
-        calls: json['calls'] as String);
+        calls: json['calls'] as String,
+        cardAmount: json['cardAmount'] as String);
   }
 }
 
@@ -565,5 +565,60 @@ class EarnRedeemCountClass {
     return EarnRedeemCountClass(
         EarnCount: json['EarnCount'] as String,
         RedeemCount: json['RedeemCount'] as String);
+  }
+}
+
+class CouponDataClass {
+  String MESSAGE;
+  String ORIGINAL_ERROR;
+  bool ERROR_STATUS;
+  bool RECORDS;
+  List<CouponClass> Data;
+
+  CouponDataClass(
+      {this.MESSAGE,
+      this.ORIGINAL_ERROR,
+      this.ERROR_STATUS,
+      this.RECORDS,
+      this.Data});
+
+  factory CouponDataClass.fromJson(Map<String, dynamic> json) {
+    return CouponDataClass(
+        MESSAGE: json['MESSAGE'] as String,
+        ORIGINAL_ERROR: json['ORIGINAL_ERROR'] as String,
+        ERROR_STATUS: json['ERROR_STATUS'] as bool,
+        RECORDS: json['RECORDS'] as bool,
+        Data: json['Data']
+            .map<CouponClass>((json) => CouponClass.fromJson(json))
+            .toList());
+  }
+}
+
+class CouponClass {
+  String CouponId;
+  String CouponCode;
+  String CouponType;
+  String CouponAmt;
+  String StartDate;
+  String EndDate;
+
+  CouponClass(
+      {this.CouponId,
+      this.CouponCode,
+      this.CouponType,
+      this.CouponAmt,
+      this.StartDate,
+      this.EndDate,
+      });
+
+  factory CouponClass.fromJson(Map<String, dynamic> json) {
+    return CouponClass(
+      CouponId: json['CouponId'] as String,
+      CouponCode: json['CouponCode'] as String,
+      CouponType: json['CouponType'] as String,
+      CouponAmt: json['CouponAmt'] as String,
+      StartDate: json['StartDate'] as String,
+      EndDate: json['EndDate'] as String,
+    );
   }
 }

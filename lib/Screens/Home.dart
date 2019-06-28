@@ -120,8 +120,11 @@ class _HomeState extends State<Home> {
     setState(() {
       isLoading = true;
     });
-    Services.GetDashboardCount().then((val) {
+    Services.GetDashboardCount().then((val)  async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       if (val != null && val.length > 0) {
+        await prefs.setString(cnst.Session.CardPaymentAmount, val[0].cardAmount);
+        print(val[0].cardAmount);
         setState(() {
           _dashboardCount = val[0];
         });

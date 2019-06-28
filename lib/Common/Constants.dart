@@ -24,6 +24,9 @@ class Session{
   static const String Email = "Email";
   static const String ReferCode = "ReferCode";
   static const String IsAppIntroCompleted = "IsAppIntroCompleted";
+  static const String CardPaymentAmount = "CardPaymentAmount";
+
+
 }
 
 class MESSAGES {
