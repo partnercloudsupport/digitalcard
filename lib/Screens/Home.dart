@@ -27,6 +27,7 @@ class _HomeState extends State<Home> {
   String ReferCode = "";
   String ExpDate = "";
   String MemberType = "";
+  String ShareMsg = "";
 
   @override
   void initState() {
@@ -107,6 +108,7 @@ class _HomeState extends State<Home> {
         ReferCode = data[0].MyReferralCode;
         ExpDate = data[0].ExpDate;
         MemberType = data[0].MemberType;
+        ShareMsg = data[0].ShareMsg;
         isLoadingProfile = false;
       });
     }, onError: (e) {
@@ -396,7 +398,7 @@ class _HomeState extends State<Home> {
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
-                                          memberId: MemberId, memberName: Name,isRegular: val,memberType: MemberType)));
+                                          memberId: MemberId, memberName: Name,isRegular: val,memberType: MemberType,shareMsg: ShareMsg,)));
                               /*else
                                 showMsg(
                                     'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/

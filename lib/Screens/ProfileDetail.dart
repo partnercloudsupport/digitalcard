@@ -66,6 +66,7 @@ class _ProfileDetailState extends State<ProfileDetail>
   TextEditingController txtAboutCompany = new TextEditingController();
   TextEditingController txtGstNo = new TextEditingController();
   TextEditingController txtCompanyPAN = new TextEditingController();
+  TextEditingController txtShareMsg = new TextEditingController();
 
   DateTime date = new DateTime.now();
 
@@ -92,6 +93,7 @@ class _ProfileDetailState extends State<ProfileDetail>
   bool editCompanyPan = false;
   bool editCompanyGst = false;
   bool editCompanyAbout = false;
+  bool editShareMsg = false;
 
   bool isLoading = false;
 
@@ -142,6 +144,7 @@ class _ProfileDetailState extends State<ProfileDetail>
     txtCompanyPAN.text = memberdata.CompanyPAN;
     txtAboutCompany.text = memberdata.AboutCompany;
     txtMap.text = memberdata.GMap;
+    txtShareMsg.text = memberdata.ShareMsg;
 
     setState(() {
       MemberId = memberdata.Id;
@@ -3634,11 +3637,159 @@ class _ProfileDetailState extends State<ProfileDetail>
                               ),
 
                               //About
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: AnimatedSize(
+                                  duration: Duration(milliseconds: 250),
+                                  curve: Curves.easeInOut,
+                                  vsync: this,
+                                  child: !editCompanyAbout
+                                      ? Row(
+                                          children: <Widget>[
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  80,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Image.asset(
+                                                      "images/profile/negotiation24.png"),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            110,
+                                                    child: Text(
+                                                        memberdata.AboutCompany !=
+                                                                null
+                                                            ? memberdata
+                                                                .AboutCompany
+                                                            : "",
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .grey[600],
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    editCompanyAbout = true;
+                                                  });
+                                                },
+                                                child: Icon(Icons.edit))
+                                          ],
+                                        )
+                                      : Row(
+                                          children: <Widget>[
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  150,
+                                              //margin: EdgeInsets.only(top: 20),
+                                              decoration: BoxDecoration(
+                                                  color: Color.fromRGBO(
+                                                      255, 255, 255, 0.5),
+                                                  border:
+                                                      new Border.all(width: 1),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(5))),
+                                              child: TextFormField(
+                                                controller: txtAboutCompany,
+                                                maxLines: 3,
+                                                decoration: InputDecoration(
+                                                    prefixIcon: Image.asset(
+                                                        "images/profile/negotiation24.png"),
+                                                    hintText: "About Company"),
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                              //height: 40,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    if (txtAboutCompany.text !=
+                                                        "") {
+                                                      updateProfile(
+                                                              'AboutCompany',
+                                                              txtAboutCompany
+                                                                  .text)
+                                                          .then((val) {
+                                                        memberdata
+                                                                .AboutCompany =
+                                                            txtAboutCompany
+                                                                .text;
+                                                        setState(() {
+                                                          editCompanyAbout =
+                                                              false;
+                                                        });
+                                                      }, onError: (e) {
+                                                        txtAboutCompany.text =
+                                                            memberdata
+                                                                .AboutCompany;
+                                                        setState(() {
+                                                          editCompanyAbout =
+                                                              false;
+                                                        });
+                                                      });
+                                                    } else {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "Please Enter Data First",
+                                                          toastLength: Toast
+                                                              .LENGTH_SHORT,
+                                                          gravity:
+                                                              ToastGravity.TOP,
+                                                          backgroundColor:
+                                                              Colors.yellow,
+                                                          textColor:
+                                                              Colors.black,
+                                                          fontSize: 15.0);
+                                                    }
+                                                  },
+                                                  child:
+                                                      Icon(Icons.done_outline)),
+                                            ),
+                                            GestureDetector(
+                                                onTap: () {
+                                                  txtAboutCompany.text =
+                                                      memberdata.AboutCompany;
+                                                  setState(() {
+                                                    editCompanyAbout = false;
+                                                  });
+                                                },
+                                                child: Icon(Icons.close))
+                                          ],
+                                        ),
+                                ),
+                              ),
+
+                              //Share Msg
                               AnimatedSize(
                                 duration: Duration(milliseconds: 250),
                                 curve: Curves.easeInOut,
                                 vsync: this,
-                                child: !editCompanyAbout
+                                child: !editShareMsg
                                     ? Row(
                                         children: <Widget>[
                                           Container(
@@ -3651,7 +3802,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                                   CrossAxisAlignment.center,
                                               children: <Widget>[
                                                 Image.asset(
-                                                    "images/profile/negotiation24.png"),
+                                                    "images/profile/sharemsg24.png"),
                                                 Container(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -3661,10 +3812,9 @@ class _ProfileDetailState extends State<ProfileDetail>
                                                           .width -
                                                       110,
                                                   child: Text(
-                                                      memberdata.AboutCompany !=
+                                                      memberdata.ShareMsg !=
                                                               null
-                                                          ? memberdata
-                                                              .AboutCompany
+                                                          ? memberdata.ShareMsg
                                                           : "",
                                                       style: TextStyle(
                                                           color:
@@ -3679,7 +3829,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                                           GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  editCompanyAbout = true;
+                                                  editShareMsg = true;
                                                 });
                                               },
                                               child: Icon(Icons.edit))
@@ -3701,12 +3851,12 @@ class _ProfileDetailState extends State<ProfileDetail>
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(5))),
                                             child: TextFormField(
-                                              controller: txtAboutCompany,
+                                              controller: txtShareMsg,
                                               maxLines: 3,
                                               decoration: InputDecoration(
                                                   prefixIcon: Image.asset(
-                                                      "images/profile/negotiation24.png"),
-                                                  hintText: "About Company"),
+                                                      "images/profile/sharemsg24.png"),
+                                                  hintText: "Share Msg"),
                                               keyboardType: TextInputType.text,
                                               style: TextStyle(
                                                   color: Colors.black),
@@ -3718,26 +3868,20 @@ class _ProfileDetailState extends State<ProfileDetail>
                                                 horizontal: 20),
                                             child: GestureDetector(
                                                 onTap: () {
-                                                  if (txtAboutCompany.text !=
-                                                      "") {
-                                                    updateProfile(
-                                                            'AboutCompany',
-                                                            txtAboutCompany
-                                                                .text)
+                                                  if (txtShareMsg.text != "") {
+                                                    updateProfile('ShareMsg',
+                                                            txtShareMsg.text)
                                                         .then((val) {
-                                                      memberdata.AboutCompany =
-                                                          txtAboutCompany.text;
+                                                      memberdata.ShareMsg =
+                                                          txtShareMsg.text;
                                                       setState(() {
-                                                        editCompanyAbout =
-                                                            false;
+                                                        editShareMsg = false;
                                                       });
                                                     }, onError: (e) {
-                                                      txtAboutCompany.text =
-                                                          memberdata
-                                                              .AboutCompany;
+                                                      txtShareMsg.text =
+                                                          memberdata.ShareMsg;
                                                       setState(() {
-                                                        editCompanyAbout =
-                                                            false;
+                                                        editShareMsg = false;
                                                       });
                                                     });
                                                   } else {
@@ -3759,10 +3903,10 @@ class _ProfileDetailState extends State<ProfileDetail>
                                           ),
                                           GestureDetector(
                                               onTap: () {
-                                                txtAboutCompany.text =
-                                                    memberdata.AboutCompany;
+                                                txtShareMsg.text =
+                                                    memberdata.ShareMsg;
                                                 setState(() {
-                                                  editCompanyAbout = false;
+                                                  editShareMsg = false;
                                                 });
                                               },
                                               child: Icon(Icons.close))

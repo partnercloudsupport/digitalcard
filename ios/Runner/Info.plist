@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>digitalcard</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.1</string>
+	<string>1.0.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -28,17 +30,15 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This is called Privacy - Camera Usage Description in the visual editor.</string>
+	<string>Need Camera Access for user profile photo</string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
+	<string>Need Contact Access to save contact in phonebook</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires location access to function properly.</string>
+	<string>Need Location Access for google map </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires location access to function properly.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This is called Privacy - Microphone Usage Description in the visual editor.</string>
+	<string>Need Location Access for google map </string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This is called Privacy - Photo Library Usage Description in the visual editor.</string>
+	<string>Need Photo Library Access for user profile photo</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

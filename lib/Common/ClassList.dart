@@ -305,6 +305,7 @@ class MemberClass {
   String CompanyPAN;
   String GstNo;
   String AboutCompany;
+  String ShareMsg;
 
   MemberClass(
       {this.Id,
@@ -338,7 +339,9 @@ class MemberClass {
       this.PersonalPAN,
       this.CompanyPAN,
       this.GstNo,
-      this.AboutCompany});
+      this.AboutCompany,
+      this.ShareMsg,
+      });
 
   factory MemberClass.fromJson(Map<String, dynamic> json) {
     return MemberClass(
@@ -374,6 +377,7 @@ class MemberClass {
       CompanyPAN: json['CompanyPAN'] as String,
       GstNo: json['GstNo'] as String,
       AboutCompany: json['AboutCompany'] as String,
+      ShareMsg: json['ShareMsg'] as String,
     );
   }
 }

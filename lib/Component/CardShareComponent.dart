@@ -18,13 +18,16 @@ class CardShareComponent extends StatefulWidget {
   final String memberName;
   final bool isRegular;
   final String memberType;
+  final String shareMsg;
 
   const CardShareComponent(
       {Key key,
       this.memberId,
       this.memberName,
       this.isRegular,
-      this.memberType})
+      this.memberType,
+      this.shareMsg,
+      })
       : super(key: key);
 
   @override
@@ -125,7 +128,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
   }
 
   String DirectShareMessage() {
-    String shareMessage = cnst.directShareMsg;
+    String shareMessage = widget.shareMsg;
     String url = cnst.profileUrl;
 
     //Replace static string with userid
