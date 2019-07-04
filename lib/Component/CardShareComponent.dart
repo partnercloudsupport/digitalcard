@@ -51,12 +51,10 @@ class _CardShareComponentState extends State<CardShareComponent> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Digital Card"),
           content: new Text(msg),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {
@@ -99,7 +97,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
   }
 
   String ShareMessage(bool isurl) {
-    String shareMessage = cnst.shareMessage;
+    String shareMessage = widget.shareMsg;
     String url = cnst.profileUrl;
 
     //Replace static string with userid
@@ -118,13 +116,17 @@ class _CardShareComponentState extends State<CardShareComponent> {
         ? urlwithsender.replaceAll("#link", Uri.encodeComponent(url))
         : urlwithsender.replaceAll("#link", url);
 
+    //Replace static string with Link
+    String urlwithpapplink =
+    urlwithprofilelink.replaceAll("#applink", cnst.playstoreUrl);
+
     if (widget.memberType == null ||
         widget.memberType.length == 0 ||
         widget.memberType == 'Trial')
-      urlwithprofilelink = urlwithprofilelink +
+      urlwithpapplink = urlwithpapplink +
           "\nPowered by ITFuturz, \nArpit Shah \n9879208321";
 
-    return urlwithprofilelink;
+    return urlwithpapplink;
   }
 
   String DirectShareMessage() {

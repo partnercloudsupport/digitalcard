@@ -432,7 +432,9 @@ class _HomeState extends State<Home> {
                                   .replaceAll("#refercode", ReferCode);
                               String withappurl = withrefercode.replaceAll(
                                   "#appurl", cnst.playstoreUrl);
-                              Share.share(withappurl);
+                              String withmemberid = withappurl.replaceAll(
+                                  "#id", MemberId);
+                              Share.share(withmemberid);
                             },
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0))),
