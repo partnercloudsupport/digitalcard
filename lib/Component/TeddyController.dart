@@ -13,6 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:digitalcard/Screens/MemberSelection.dart';
 
 class TeddyController extends FlareControls {
   // Store a reference to our face control node (the "ctrl_look" node in Flare)
@@ -71,7 +72,7 @@ class TeddyController extends FlareControls {
     // We could just set _faceControl.translation to targetTranslation, but we want to animate it smoothly to this target
     // so we interpolate towards it by a factor of elapsed time in order to maintain speed regardless of frame rate.
     Vec2D diff =
-    Vec2D.subtract(Vec2D(), targetTranslation, _faceControl.translation);
+        Vec2D.subtract(Vec2D(), targetTranslation, _faceControl.translation);
     Vec2D frameTranslation = Vec2D.add(Vec2D(), _faceControl.translation,
         Vec2D.scale(diff, diff, min(1.0, elapsed * 5.0)));
 
@@ -119,20 +120,65 @@ class TeddyController extends FlareControls {
     _mobileno = value;
   }
 
-  Future<bool> CheckLogin() async {
-      try{
-        List<MemberClass> data = await Services.MemberLogin(_mobileno);
+  Future<List<MemberClass>> CheckLogin() async {
+    try {
+      List<MemberClass> data = await Services.MemberLogin(_mobileno);
+      return data;
+    } catch (e) {
+      print("Error : on Login Call : $e");
+      Fluttertoast.showToast(
+          msg: "Error : on Login Call",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 15.0);
+      return null;
+    }
+  }
+
+  Future<bool> submitLogin(BuildContext context) async {
+    if (_mobileno != null && _mobileno != "") {
+      CheckLogin().then((data) async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        print('data call');
         if (data != null && data.length > 0) {
-          print('data found');
-          await prefs.setString(cnst.Session.MemberId, data[0].Id);
-          await prefs.setString(cnst.Session.Name, data[0].Name);
-          await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
-          await prefs.setString(cnst.Session.Company, data[0].Company);
-          await prefs.setString(cnst.Session.Email, data[0].Email);
-          await prefs.setString(cnst.Session.ReferCode, data[0].MyReferralCode);
-          return true;
+          if (data.length > 1) {
+            play("success");
+            Fluttertoast.showToast(
+                msg: "Login Successfully !",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.TOP,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 15.0);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MemberSelection(memberList: data),
+              ),
+            );
+          } else {
+            await prefs.setString(cnst.Session.MemberId, data[0].Id);
+            await prefs.setString(cnst.Session.Name, data[0].Name);
+            await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
+            await prefs.setString(cnst.Session.Company, data[0].Company);
+            await prefs.setString(cnst.Session.Email, data[0].Email);
+            await prefs.setString(
+                cnst.Session.ReferCode, data[0].MyReferralCode);
+
+            play("success");
+            Fluttertoast.showToast(
+                msg: "Login Successfully !",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.TOP,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 15.0);
+            Timer(Duration(seconds: 2), () async {
+              Navigator.pushReplacementNamed(context, '/Dashboard');
+            });
+          }
         } else {
           play("fail");
           Fluttertoast.showToast(
@@ -142,41 +188,8 @@ class TeddyController extends FlareControls {
               backgroundColor: Colors.red,
               textColor: Colors.white,
               fontSize: 15.0);
-          return false;
+          return data;
         }
-      }catch(e){
-        print("Error : on Login Call : $e");
-        Fluttertoast.showToast(
-            msg: "Error : on Login Call",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.TOP,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 15.0);
-        return false;
-      }
-  }
-
-  Future<bool> submitLogin(BuildContext context) async{
-    if (_mobileno != null && _mobileno != "") {
-      CheckLogin().then((val){
-        print('value of login : $val');
-        if(val) {
-          play("success");
-          Fluttertoast.showToast(
-              msg: "Login Successfully !",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.TOP,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 15.0);
-          Timer(Duration(seconds: 2), () async {
-            Navigator.pushReplacementNamed(context, '/Dashboard');
-          });
-        }
-        else
-          play("fail");
-        return val;
       });
     } else {
       play("fail");

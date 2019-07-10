@@ -73,9 +73,9 @@ class More extends StatelessWidget {
                             ],
                           )),
                     ),
-                    /*GestureDetector(
+                    GestureDetector(
                       onTap: () =>
-                          Navigator.pushNamed(context, "/PhoneContact"),
+                          Navigator.pushNamed(context, "/AddCard"),
                       child: Container(
                           decoration: BoxDecoration(
                               border: Border(
@@ -85,18 +85,18 @@ class More extends StatelessWidget {
                               horizontal: 20, vertical: 10),
                           child: Row(
                             children: <Widget>[
-                              Image.asset("images/refer.png",
+                              Image.asset("images/logo.png",
                                   height: 50, width: 50),
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
-                                child: Text("Phone Contact",
+                                child: Text("Purchase New Card",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600)),
                               ),
                             ],
                           )),
-                    ),*/
+                    ),
                     GestureDetector(
                       onTap: () async {
                         SharedPreferences prefs =

@@ -3,6 +3,7 @@ import 'package:digitalcard/Common/Constants.dart' as cnst;
 import 'package:digitalcard/Common/ClassList.dart';
 import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:digitalcard/Screens/MemberSelection.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -59,13 +60,23 @@ class _LoginState extends State<Login> {
         });
 
         if (data != null && data.length > 0) {
-          await prefs.setString(cnst.Session.MemberId, data[0].Id);
-          await prefs.setString(cnst.Session.Name, data[0].Name);
-          await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
-          await prefs.setString(cnst.Session.Company, data[0].Company);
-          await prefs.setString(cnst.Session.ReferCode, data[0].MyReferralCode);
-
-          Navigator.pushReplacementNamed(context, "/Dashboard");
+          print("length : ${data.length}");
+          if (data.length > 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MemberSelection(memberList: data),
+              ),
+            );
+          } else {
+            await prefs.setString(cnst.Session.MemberId, data[0].Id);
+            await prefs.setString(cnst.Session.Name, data[0].Name);
+            await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
+            await prefs.setString(cnst.Session.Company, data[0].Company);
+            await prefs.setString(
+                cnst.Session.ReferCode, data[0].MyReferralCode);
+            Navigator.pushReplacementNamed(context, "/Dashboard");
+          }
         } else {
           showMsg("Invalid login details");
         }
@@ -122,40 +133,6 @@ class _LoginState extends State<Login> {
               height: MediaQuery.of(context).size.height - 350.0,
               child: Column(
                 children: <Widget>[
-                  /*Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 0.5),
-                        border: new Border.all(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.perm_identity),
-                      ),
-                      keyboardType: TextInputType.number,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    //height: 40,
-                    width: MediaQuery.of(context).size.width - 60,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.only(top: 20),
-                    decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 0.5),
-                        border: new Border.all(width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                      ),
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    //height: 40,
-                    width: MediaQuery.of(context).size.width - 60,
-                  ),*/
                   Container(
                     padding: EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(

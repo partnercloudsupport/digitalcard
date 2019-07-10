@@ -21,6 +21,7 @@ import 'package:digitalcard/Screens/EditProfile.dart';
 import 'package:digitalcard/Screens/ProfileDetail.dart';
 import 'package:digitalcard/Screens/AppIntro.dart';
 import 'package:digitalcard/Screens/Payment.dart';
+import 'package:digitalcard/Screens/AddCard.dart';
 //Flare Login
 import 'package:digitalcard/Screens/FlareLogin/FlareLogin.dart';
 
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/FlareLogin': (context) => FlareLogin(),
         '/MobileLogin': (context) => MobileLogin(),
         '/Payment': (context) => Payment(),
+        '/AddCard': (context) => AddCard(),
       },
       theme: ThemeData(
         fontFamily: 'Montserrat',
