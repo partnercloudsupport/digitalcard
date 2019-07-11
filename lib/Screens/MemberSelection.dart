@@ -17,8 +17,10 @@ class _MemberSelectionState extends State<MemberSelection> {
     await prefs.setString(cnst.Session.MemberId, widget.memberList[index].Id);
     await prefs.setString(cnst.Session.Name, widget.memberList[index].Name);
     await prefs.setString(cnst.Session.Mobile, widget.memberList[index].Mobile);
-    await prefs.setString(cnst.Session.Company, widget.memberList[index].Company);
-    await prefs.setString(cnst.Session.ReferCode, widget.memberList[index].MyReferralCode);
+    await prefs.setString(
+        cnst.Session.Company, widget.memberList[index].Company);
+    await prefs.setString(
+        cnst.Session.ReferCode, widget.memberList[index].MyReferralCode);
     Navigator.pushReplacementNamed(context, "/Dashboard");
   }
 
@@ -31,32 +33,37 @@ class _MemberSelectionState extends State<MemberSelection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 30,bottom: 10),
+              padding: const EdgeInsets.only(top: 30, bottom: 10),
               child: Text(
                 "Pick One Company",
-                style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
             ),
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.all(0),
                 itemCount: widget.memberList.length,
-                itemBuilder: (BuildContext context, int index){
+                itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           setSelectedMember(index);
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                          color: Colors.orange,
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 20),
+                          color: cnst.buttoncolor,
                           child: Text(
                             "${widget.memberList[index].Company}",
-                            style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

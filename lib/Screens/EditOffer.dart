@@ -14,7 +14,6 @@ import 'package:digitalcard/Common/ClassList.dart';
 
 class EditOffer extends StatefulWidget {
   final OfferClass offerClass;
-
   const EditOffer({Key key, this.offerClass}) : super(key: key);
 
   @override

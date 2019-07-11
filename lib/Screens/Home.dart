@@ -6,6 +6,7 @@ import 'package:digitalcard/Common/Services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,44 +35,23 @@ class _HomeState extends State<Home> {
     super.initState();
     GetProfileData();
     GetDashboardCount();
-    
   }
 
-  bool checkValidity(){
-    if(ExpDate.trim() != null && ExpDate.trim() != "") {
+  bool checkValidity() {
+    if (ExpDate.trim() != null && ExpDate.trim() != "") {
       final f = new DateFormat('dd MMM yyyy');
       DateTime validTillDate = f.parse(ExpDate);
       print(validTillDate);
       DateTime currentDate = new DateTime.now();
       print(currentDate);
-      if(validTillDate.isAfter(currentDate))
+      if (validTillDate.isAfter(currentDate))
         return true;
       else
         return false;
-    }else
+    } else
       return false;
   }
 
-  /*GetLocalData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String memberId = prefs.getString(cnst.Session.MemberId);
-    String name = prefs.getString(cnst.Session.Name);
-    String company = prefs.getString(cnst.Session.Company);
-
-    if (memberId != null && memberId != "")
-      setState(() {
-        MemberId = memberId;
-      });
-    if (name != null && name != "")
-      setState(() {
-        Name = name;
-      });
-    if (company != null && company != "")
-      setState(() {
-        Company = company;
-      });
-  }
-*/
   showMsg(String msg) {
     showDialog(
       context: context,
@@ -111,6 +91,7 @@ class _HomeState extends State<Home> {
         ShareMsg = data[0].ShareMsg;
         isLoadingProfile = false;
       });
+      print("MemberType : $MemberType");
     }, onError: (e) {
       setState(() {
         isLoadingProfile = false;
@@ -122,10 +103,11 @@ class _HomeState extends State<Home> {
     setState(() {
       isLoading = true;
     });
-    Services.GetDashboardCount().then((val)  async{
+    Services.GetDashboardCount().then((val) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (val != null && val.length > 0) {
-        await prefs.setString(cnst.Session.CardPaymentAmount, val[0].cardAmount);
+        await prefs.setString(
+            cnst.Session.CardPaymentAmount, val[0].cardAmount);
         print(val[0].cardAmount);
         setState(() {
           _dashboardCount = val[0];
@@ -153,7 +135,7 @@ class _HomeState extends State<Home> {
               child: FadeInImage.assetNetwork(
                   placeholder: "images/profilebg.jpg",
                   image: CoverPhoto,
-                  height: MediaQuery.of(context).size.height * 0.40,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover),
               clipper: MyClipper(),
@@ -162,7 +144,7 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(
-                  top: (MediaQuery.of(context).size.height * 0.40) - 80),
+                  top: (MediaQuery.of(context).size.height * 0.35) - 80),
               color: Colors.transparent,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,59 +159,60 @@ class _HomeState extends State<Home> {
                           fit: BoxFit.cover),
                     ),
                   ),
-
-                  !isLoadingProfile ?
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(Name,
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w600))),
-                      Padding(
-                          padding: EdgeInsets.only(top: 5, bottom: 0),
-                          child: Text(Company,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w600))),
-                      GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, "/ProfileDetail"),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, bottom: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text("Edit Profile",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w600)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Icon(Icons.edit, color: Colors.blue),
-                              )
-                            ],
+                  !isLoadingProfile
+                      ? Column(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Text(Name,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey[800],
+                                        fontWeight: FontWeight.w600))),
+                            Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 0),
+                                child: Text(Company,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w600))),
+                            GestureDetector(
+                              onTap: () => Navigator.pushNamed(
+                                  context, "/ProfileDetail"),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text("Edit Profile",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w600)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child:
+                                          Icon(Icons.edit, color: Colors.blue),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          height: 100,
+                          width: 100,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.blue),
+                              strokeWidth: 3,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ) : Container(
-                    height: 100,
-                    width: 100,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                        AlwaysStoppedAnimation<Color>(
-                            Colors.blue),
-                        strokeWidth: 3,
-                      ),
-                    ),
-                  ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -275,11 +258,13 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/ShareHistory'),
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/ShareHistory'),
                         child: Card(
                           elevation: 3,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                               side: BorderSide(
                                   width: 0.5, color: Colors.grey[900])),
                           child: Container(
@@ -398,7 +383,12 @@ class _HomeState extends State<Home> {
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
-                                          memberId: MemberId, memberName: Name,isRegular: val,memberType: MemberType,shareMsg: ShareMsg,)));
+                                        memberId: MemberId,
+                                        memberName: Name,
+                                        isRegular: val,
+                                        memberType: MemberType,
+                                        shareMsg: ShareMsg,
+                                      )));
                               /*else
                                 showMsg(
                                     'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
@@ -416,7 +406,8 @@ class _HomeState extends State<Home> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Image.asset("images/logo.png",height: 24,width: 24),
+                                Image.asset("images/logo.png",
+                                    height: 24, width: 24),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text("Refer",
@@ -432,18 +423,91 @@ class _HomeState extends State<Home> {
                                   .replaceAll("#refercode", ReferCode);
                               String withappurl = withrefercode.replaceAll(
                                   "#appurl", cnst.playstoreUrl);
-                              String withmemberid = withappurl.replaceAll(
-                                  "#id", MemberId);
+                              String withmemberid =
+                                  withappurl.replaceAll("#id", MemberId);
                               Share.share(withmemberid);
                             },
                             shape: new RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0))),
                       )
                     ],
-                  )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          elevation: 5,
+                          textColor: Colors.white,
+                          color: cnst.buttoncolor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.white,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Text("View Card",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15)),
+                              )
+                            ],
+                          ),
+                          onPressed: () async {
+                            String profileUrl =
+                                cnst.profileUrl.replaceAll("#id", MemberId);
+                            if (await canLaunch(profileUrl)) {
+                              await launch(profileUrl);
+                            } else {
+                              throw 'Could not launch $profileUrl';
+                            }
+                          },
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0))),
+                      (MemberType == null ||
+                              MemberType == "" ||
+                              MemberType.toLowerCase() == "trial")
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: RaisedButton(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                elevation: 5,
+                                textColor: Colors.white,
+                                color: cnst.buttoncolor,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(
+                                        "${cnst.Inr_Rupee}  Pay Now",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/Payment');
+                                },
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
