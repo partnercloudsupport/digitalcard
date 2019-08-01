@@ -533,6 +533,25 @@ class Services {
     }
   }
 
+  static Future<SaveDataClass> CardPaymentWithPackage(data) async {
+    String url = APIURL.API_URL + 'MemberPaymentWithPackage';
+    print("CardPaymentWithPackage URL: " + url);
+    final response = await http.post(url, body: data);
+    try {
+      print(response.body);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        SaveDataClass saveDataClass = new SaveDataClass.fromJson(jsonResponse);
+        return saveDataClass;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("CardPaymentWithPackage Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
   //denish ubhal
   static Future<List<CouponClass>> GetCoupon(String CouponCode) async {
     List<CouponClass> list = [];
@@ -559,7 +578,33 @@ class Services {
       print("GetDashboardCount Erorr : " + e.toString());
       throw Exception(MESSAGES.INTERNET_ERROR);
     }
-
-    return list;
   }
+
+  static Future<List<PackageClass>> GetPackages() async {
+    List<PackageClass> list = [];
+
+    String url = APIURL.API_URL + 'GetPackage?type=package';
+    print("GetPackages URL: " + url);
+    final response = await http.get(url);
+    try {
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        PackageClassData packageClassData =
+        new PackageClassData.fromJson(jsonResponse);
+
+        if (packageClassData.ERROR_STATUS == false)
+          list = packageClassData.Data;
+        else
+          list = [];
+
+        return list;
+      } else {
+        throw Exception(MESSAGES.INTERNET_ERROR);
+      }
+    } catch (e) {
+      print("GetPackages Erorr : " + e.toString());
+      throw Exception(MESSAGES.INTERNET_ERROR);
+    }
+  }
+
 }

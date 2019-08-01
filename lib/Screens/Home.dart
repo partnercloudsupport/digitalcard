@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
     super.initState();
     GetProfileData();
     GetDashboardCount();
+    GetLocalData();
   }
 
   bool checkValidity() {
@@ -53,11 +54,11 @@ class _HomeState extends State<Home> {
       return false;
   }
 
-  GetLocalData() async{
+  GetLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isActivePayment = prefs.getBool(cnst.Session.IsActivePayment);
 
-    if(isActivePayment != null)
+    if (isActivePayment != null)
       setState(() {
         IsActivePayment = isActivePayment;
       });
@@ -390,7 +391,8 @@ class _HomeState extends State<Home> {
                             onPressed: () {
                               bool val = checkValidity();
                               /*if(val != null && val == true)*/
-                              Navigator.of(context).push(PageRouteBuilder(
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
                                   opaque: false,
                                   pageBuilder: (BuildContext context, _, __) =>
                                       CardShareComponent(
@@ -399,7 +401,10 @@ class _HomeState extends State<Home> {
                                         isRegular: val,
                                         memberType: MemberType,
                                         shareMsg: ShareMsg,
-                                      )));
+                                        IsActivePayment: IsActivePayment,
+                                      ),
+                                ),
+                              );
                               /*else
                                 showMsg(
                                     'Your trial is expired please contact to digital card team for renewal.\n\nThank you,\nRegards\nDigital Card');*/
@@ -479,7 +484,8 @@ class _HomeState extends State<Home> {
                           },
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0))),
-                      (IsActivePayment == true && MemberType.toLowerCase() == "trial")
+                      (IsActivePayment == true &&
+                              MemberType.toLowerCase() == "trial")
                           ? Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: RaisedButton(

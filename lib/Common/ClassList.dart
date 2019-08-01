@@ -629,3 +629,52 @@ class CouponClass {
     );
   }
 }
+
+
+class PackageClassData {
+  String MESSAGE;
+  String ORIGINAL_ERROR;
+  bool ERROR_STATUS;
+  bool RECORDS;
+  List<PackageClass> Data;
+
+  PackageClassData({
+    this.MESSAGE,
+    this.ORIGINAL_ERROR,
+    this.ERROR_STATUS,
+    this.RECORDS,
+    this.Data,
+  });
+
+  factory PackageClassData.fromJson(Map<String, dynamic> json) {
+    return PackageClassData(
+        MESSAGE: json['MESSAGE'] as String,
+        ORIGINAL_ERROR: json['ORIGINAL_ERROR'] as String,
+        ERROR_STATUS: json['ERROR_STATUS'] as bool,
+        RECORDS: json['RECORDS'] as bool,
+        Data: json['Data']
+            .map<PackageClass>((json) => PackageClass.fromJson(json))
+            .toList());
+  }
+}
+
+class PackageClass {
+  String id;
+  String name,durationYears,amount;
+
+  PackageClass({
+    this.id,
+    this.name,
+    this.durationYears,
+    this.amount,
+  });
+
+  factory PackageClass.fromJson(Map<String, dynamic> json) {
+    return PackageClass(
+      id: json["Id"] as String,
+      name: json['Name'] as String,
+      durationYears: json['DurationYears'] as String,
+      amount: json['Amount'] as String,
+    );
+  }
+}

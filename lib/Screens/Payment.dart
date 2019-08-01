@@ -22,6 +22,7 @@ class _PaymentState extends State<Payment> {
   String Amount = "";
   String OriginalAmount = "";
   String AmountCopy = "";
+  String packageId="";
 
   //String Amount = "99900";
   String PaymentStatus = "InProcess";
@@ -30,6 +31,9 @@ class _PaymentState extends State<Payment> {
   var couponStatus = false;
   CouponClass couponclass;
 
+  List<PackageClass> packageData = [];
+  PackageClass _packageClass;
+
   TextEditingController edtCouponCode = new TextEditingController();
 
   @override
@@ -37,6 +41,7 @@ class _PaymentState extends State<Payment> {
     // TODO: implement initState
     super.initState();
     GetLocalData();
+    _getPackageData();
   }
 
   GetLocalData() async {
@@ -73,6 +78,31 @@ class _PaymentState extends State<Payment> {
       setState(() {
         Email = email;
       });
+  }
+
+  _getPackageData() async {
+    Future res = Services.GetPackages();
+    res.then((data) async {
+      if (data != null && data.length > 0) {
+        setState(() {
+          isLoading = false;
+          packageData = data;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }, onError: (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(
+          textColor: Colors.white,
+          msg: "Something went Wrong",
+          backgroundColor: Colors.red,
+          gravity: ToastGravity.TOP);
+    });
   }
 
   startPayment() async {
@@ -117,9 +147,10 @@ class _PaymentState extends State<Payment> {
       'memberid': MemberId,
       'paymenttype': 'Online',
       'amount': (int.parse(Amount) / 100).toString(),
+      'packageid': packageId
     };
     print(data);
-    Services.CardPayment(data).then((data) {
+    Services.CardPaymentWithPackage(data).then((data) {
       if (data != null && data.ERROR_STATUS == false) {
         Fluttertoast.showToast(
             msg: "Payment Saved",
@@ -215,10 +246,10 @@ class _PaymentState extends State<Payment> {
                   : Container(),
               PaymentStatus == 'InProcess'
                   ? Card(
-                      margin: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(10),
                       child: Container(
                         width: MediaQuery.of(context).size.width - 40,
-                        padding: EdgeInsets.all(20),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -228,150 +259,203 @@ class _PaymentState extends State<Payment> {
                                     fontWeight: FontWeight.w600,
                                     color: Colors.grey.shade600)),
                             Divider(),
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                    width: 90,
-                                    child: Text('Name',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.grey.shade600))),
-                                Text('$Name',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade600)),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                      width: 90,
-                                      child: Text('Mobile',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade600))),
-                                  Text('$Mobile',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade600)),
-                                ],
+                            packageData != null && packageData.length >= 0
+                                ? SizedBox(
+                              child: InputDecorator(
+                                  decoration: new InputDecoration(
+                                    contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    //labelText: "",
+                                    fillColor: Colors.white,
+                                    border: new OutlineInputBorder(
+                                      borderRadius: new BorderRadius.circular(5.0),
+                                      borderSide: new BorderSide(),
+                                    ),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<PackageClass>(
+                                      //isDense: true,
+                                      hint: new Text("Select Package"),
+                                      value: _packageClass,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          _packageClass = val;
+                                          packageId=val.id;
+                                          OriginalAmount = val.amount + "00";
+                                          Amount = val.amount + "00";
+                                          AmountCopy = val.amount;
+
+                                        });
+                                      },
+                                      items: packageData
+                                          .map((PackageClass package) {
+                                        return new DropdownMenuItem<
+                                            PackageClass>(
+                                          value: package,
+                                          child: new Text(
+                                            package.name,
+                                            style: new TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
                               ),
+                              width: (MediaQuery.of(context).size.width - 40),
+                            )
+                                : CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.blue),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: _packageClass!=null?Column(
                                 children: <Widget>[
-                                  Container(
-                                      width: 90,
-                                      child: Text('Email',
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                          width: 90,
+                                          child: Text('Name',
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.grey.shade600))),
+                                      Text('$Name',
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade600))),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          170,
-                                      child: Text('$Email',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade600))),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                      width: 90,
-                                      child: Text('Amount',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade600))),
-                                  Text('${double.parse(OriginalAmount) / 100}',
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade600)),
-                                ],
-                              ),
-                            ),
-                            couponclass != null && couponStatus == true
-                                ? Column(
+                                              color: Colors.grey.shade600)),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                            width: 90,
+                                            child: Text('Mobile',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade600))),
+                                        Text('$Mobile',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade600)),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                            width: 90,
+                                            child: Text('Email',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade600))),
+                                        Container(
+                                            width: MediaQuery.of(context).size.width -
+                                                170,
+                                            child: Text('$Email',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade600))),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                            width: 90,
+                                            child: Text('Amount',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.grey.shade600))),
+                                        Text('${double.parse(OriginalAmount) / 100}',
+                                            style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey.shade600)),
+                                      ],
+                                    ),
+                                  ),
+                                  couponclass != null && couponStatus == true
+                                      ? Column(
                                     children: <Widget>[
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             top: 10, bottom: 20),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceAround,
                                           children: <Widget>[
                                             Container(
                                                 width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
+                                                    .size
+                                                    .width /
                                                     2.5,
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Text(
                                                         '${couponclass.CouponCode}',
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                            FontWeight.w600,
                                                             color: Colors.grey
                                                                 .shade600)),
                                                     Text("Applied",
                                                         style: TextStyle(
                                                             fontSize: 13,
                                                             fontWeight:
-                                                                FontWeight.w600,
+                                                            FontWeight.w600,
                                                             color:
-                                                                Colors.grey)),
+                                                            Colors.grey)),
                                                   ],
                                                 )),
                                             Container(
                                                 width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
+                                                    .size
+                                                    .width /
                                                     2.5,
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
+                                                  CrossAxisAlignment.end,
                                                   children: <Widget>[
                                                     couponclass.CouponType
-                                                                .toLowerCase() !=
-                                                            "fixed"
+                                                        .toLowerCase() !=
+                                                        "fixed"
                                                         ? Text(
-                                                            '${couponclass.CouponAmt}%',
-                                                            style: TextStyle(
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade600))
+                                                        '${couponclass.CouponAmt}%',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w600,
+                                                            color: Colors
+                                                                .grey
+                                                                .shade600))
                                                         : Text(
-                                                            '${cnst.Inr_Rupee} ${couponclass.CouponAmt}',
-                                                            style: TextStyle(
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade600)),
+                                                        '${cnst.Inr_Rupee} ${couponclass.CouponAmt}',
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w600,
+                                                            color: Colors
+                                                                .grey
+                                                                .shade600)),
                                                   ],
                                                 )),
                                           ],
@@ -379,43 +463,47 @@ class _PaymentState extends State<Payment> {
                                       ),
                                     ],
                                   )
-                                : Container(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.4,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 0),
-                                    child: TextFormField(
-                                      controller: edtCouponCode,
-                                      keyboardType: TextInputType.text,
-                                      decoration: InputDecoration(
-                                          hintText: 'Enter Coupon Code',
-                                          labelText: 'Enter Coupon Code',
-                                          suffixStyle: const TextStyle(
-                                              color: Colors.green)),
-                                    ),
+                                      : Container(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width:
+                                        MediaQuery.of(context).size.width / 2.4,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: 0),
+                                          child: TextFormField(
+                                            controller: edtCouponCode,
+                                            keyboardType: TextInputType.text,
+                                            decoration: InputDecoration(
+                                                hintText: 'Enter Coupon Code',
+                                                labelText: 'Enter Coupon Code',
+                                                suffixStyle: const TextStyle(
+                                                    color: Colors.green)),
+                                          ),
+                                        ),
+                                      ),
+                                      MaterialButton(
+                                          color: cnst.appMaterialColor,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(3.0),
+                                            child: Text('Check\nCoupon',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600)),
+                                          ),
+                                          //padding: EdgeInsets.only(t),
+                                          onPressed: () {
+                                            //startPayment();
+                                            checkCoupon();
+                                          }),
+                                    ],
                                   ),
-                                ),
-                                MaterialButton(
-                                    color: cnst.appMaterialColor,
-                                    child: Text('Check  Coupon',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600)),
-                                    //padding: EdgeInsets.only(t),
-                                    onPressed: () {
-                                      //startPayment();
-                                      checkCoupon();
-                                    }),
-                              ],
-                            ),
-                            couponclass == null && couponStatus == true
-                                ? Container(
+                                  couponclass == null && couponStatus == true
+                                      ? Container(
                                     child: Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
@@ -425,27 +513,30 @@ class _PaymentState extends State<Payment> {
                                       ),
                                     ),
                                   )
-                                : Container(),
-                            Padding(padding: EdgeInsets.only(top: 15)),
-                            Text(
-                              'Amount Payable :  ${double.parse(Amount) / 100}',
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade600),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 15)),
-                            MaterialButton(
-                              minWidth: MediaQuery.of(context).size.width - 80,
-                              color: Colors.green,
-                              child: Text('Pay Now',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                              padding: EdgeInsets.all(10),
-                              onPressed: () => startPayment(),
-                            )
+                                      : Container(),
+                                  Padding(padding: EdgeInsets.only(top: 15)),
+                                  Text(
+                                    'Amount Payable :  ${double.parse(Amount) / 100}',
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey.shade600),
+                                  ),
+                                  Padding(padding: EdgeInsets.only(top: 15)),
+                                  MaterialButton(
+                                    minWidth: MediaQuery.of(context).size.width - 80,
+                                    color: Colors.green,
+                                    child: Text('Pay Now',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600)),
+                                    padding: EdgeInsets.all(10),
+                                    onPressed: () => startPayment(),
+                                  )
+                                ],
+                              ):Container(),
+                          )
                           ],
                         ),
                       ),
