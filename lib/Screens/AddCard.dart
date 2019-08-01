@@ -129,7 +129,7 @@ class _AddCardState extends State<AddCard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Purchase New Card"),
+        title: Text("Make New Card"),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -260,7 +260,7 @@ class _AddCardState extends State<AddCard> {
   Widget setUpButtonChild() {
     if (isLoading == false) {
       return new Text(
-        "Purchase Now",
+        "Save",
         style: TextStyle(
             color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w600),
       );

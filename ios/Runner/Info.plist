@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.2</string>
+	<string>1.0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>6</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -29,6 +29,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Digital VCard would like to access your music</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Digital VCard would like to access your calender</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Need Camera Access for user profile photo</string>
 	<key>NSContactsUsageDescription</key>
@@ -37,8 +41,12 @@
 	<string>Need Location Access for google map </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need Location Access for google map </string>
+	<key>NSMotionUsageDescription</key>
+	<string>Digital VCard would like to access your motion</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need Photo Library Access for user profile photo</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Digital VCard would like to access your speech recognition</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

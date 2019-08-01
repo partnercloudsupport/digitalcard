@@ -164,8 +164,8 @@ class TeddyController extends FlareControls {
             await prefs.setString(cnst.Session.Mobile, data[0].Mobile);
             await prefs.setString(cnst.Session.Company, data[0].Company);
             await prefs.setString(cnst.Session.Email, data[0].Email);
-            await prefs.setString(
-                cnst.Session.ReferCode, data[0].MyReferralCode);
+            await prefs.setString(cnst.Session.ReferCode, data[0].MyReferralCode);
+            await prefs.setBool(cnst.Session.IsActivePayment, data[0].IsActivePayment);
 
             play("success");
             Fluttertoast.showToast(

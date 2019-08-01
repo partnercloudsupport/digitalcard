@@ -19,6 +19,7 @@ class _HomeState extends State<Home> {
 
   bool isLoading = false;
   bool isLoadingProfile = false;
+  bool IsActivePayment = false;
 
   String MemberId = "";
   String Name = "";
@@ -50,6 +51,16 @@ class _HomeState extends State<Home> {
         return false;
     } else
       return false;
+  }
+
+  GetLocalData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isActivePayment = prefs.getBool(cnst.Session.IsActivePayment);
+
+    if(isActivePayment != null)
+      setState(() {
+        IsActivePayment = isActivePayment;
+      });
   }
 
   showMsg(String msg) {
@@ -468,9 +479,7 @@ class _HomeState extends State<Home> {
                           },
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0))),
-                      (MemberType == null ||
-                              MemberType == "" ||
-                              MemberType.toLowerCase() == "trial")
+                      (IsActivePayment == true && MemberType.toLowerCase() == "trial")
                           ? Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: RaisedButton(

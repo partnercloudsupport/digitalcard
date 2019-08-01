@@ -24,7 +24,7 @@ class More extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    GestureDetector(
+                    /*GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, "/InviteFriends");
                       },
@@ -48,7 +48,7 @@ class More extends StatelessWidget {
                               ),
                             ],
                           )),
-                    ),
+                    ),*/
                     GestureDetector(
                       onTap: () =>
                           Navigator.pushNamed(context, "/ShareHistory"),
@@ -89,7 +89,7 @@ class More extends StatelessWidget {
                                   height: 50, width: 50),
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
-                                child: Text("Purchase New Card",
+                                child: Text("Make New Card",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600)),

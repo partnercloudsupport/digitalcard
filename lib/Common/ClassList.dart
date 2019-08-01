@@ -306,6 +306,7 @@ class MemberClass {
   String GstNo;
   String AboutCompany;
   String ShareMsg;
+  bool IsActivePayment;
 
   MemberClass(
       {this.Id,
@@ -341,6 +342,7 @@ class MemberClass {
       this.GstNo,
       this.AboutCompany,
       this.ShareMsg,
+      this.IsActivePayment,
       });
 
   factory MemberClass.fromJson(Map<String, dynamic> json) {
@@ -378,6 +380,7 @@ class MemberClass {
       GstNo: json['GstNo'] as String,
       AboutCompany: json['AboutCompany'] as String,
       ShareMsg: json['ShareMsg'] as String,
+      IsActivePayment: json['IsActivePayment'] as bool,
     );
   }
 }
