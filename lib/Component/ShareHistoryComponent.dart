@@ -53,7 +53,7 @@ class ShareHistoryComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  //width: MediaQuery.of(context).size.width - 220,
+                  width: MediaQuery.of(context).size.width - 220,
                   decoration: BoxDecoration(
                     borderRadius:
                         BorderRadius.only(topRight: Radius.circular(10)),
@@ -77,6 +77,66 @@ class ShareHistoryComponent extends StatelessWidget {
                       )
                     ],
                   ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          launch("tel:" + shareClass.MobileNo);
+                        },
+                        child: Icon(
+                          Icons.call,
+                          size: 30,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          PermissionStatus permissionStatus =
+                              await _getContactPermission();
+                          try {
+                            if (permissionStatus == PermissionStatus.granted) {
+                              Item item = Item(
+                                  label: 'office', value: shareClass.MobileNo);
+
+                              Contact newContact = new Contact(
+                                  givenName: shareClass.Name, phones: [item]);
+
+                              await ContactsService.addContact(newContact);
+                              Fluttertoast.showToast(
+                                  msg: "Contact saved to phone",
+                                  backgroundColor: Colors.green,
+                                  gravity: ToastGravity.TOP,
+                                  toastLength: Toast.LENGTH_SHORT);
+                            } else {
+                              _handleInvalidPermissions(permissionStatus);
+                            }
+                          } catch (ex) {
+                            print(ex.toString());
+                            if (ex.toString() ==
+                                "PlatformException(PERMISSION_DENIED, Access to location data denied, null)") {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "Access permission is denied by user. \nplease go to setting -> app -> digitalcard -> permission, and allow permission",
+                                  backgroundColor: Colors.yellow,
+                                  gravity: ToastGravity.TOP,
+                                  toastLength: Toast.LENGTH_LONG);
+                            }
+                          }
+                        },
+                        child: Icon(
+                          Icons.contact_phone,
+                          size: 30,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 Container(
                     width: 92,
@@ -106,7 +166,7 @@ class ShareHistoryComponent extends StatelessWidget {
                     ))
               ],
             ),
-            Row(
+            /*Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -166,8 +226,7 @@ class ShareHistoryComponent extends StatelessWidget {
                         ),
                       ],
                     ),
-
-                    minWidth: MediaQuery.of(context).size.width/2.28,
+                    minWidth: MediaQuery.of(context).size.width / 2.28,
                     height: 35,
                   ),
                 ),
@@ -175,7 +234,7 @@ class ShareHistoryComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 0),
                   child: MaterialButton(
                     onPressed: () {
-                      launch("tel:"+shareClass.MobileNo);
+                      launch("tel:" + shareClass.MobileNo);
                     },
                     color: Colors.green,
                     child: Column(
@@ -197,12 +256,12 @@ class ShareHistoryComponent extends StatelessWidget {
                         ),
                       ],
                     ),
-                    minWidth: MediaQuery.of(context).size.width/2.28,
+                    minWidth: MediaQuery.of(context).size.width / 2.28,
                     height: 35,
                   ),
                 )
               ],
-            ),
+            ),*/
           ],
         ),
       ),

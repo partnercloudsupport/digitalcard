@@ -246,7 +246,7 @@ class _PaymentState extends State<Payment> {
                   : Container(),
               PaymentStatus == 'InProcess'
                   ? Card(
-                      margin: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(15),
                       child: Container(
                         width: MediaQuery.of(context).size.width - 40,
                         padding: EdgeInsets.all(10),

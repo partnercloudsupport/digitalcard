@@ -486,7 +486,8 @@ class _HomeState extends State<Home> {
                               borderRadius: new BorderRadius.circular(30.0))),
                       (IsActivePayment == true &&
                               MemberType.toLowerCase() == "trial")
-                          ? Padding(
+                          ?
+                      Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: RaisedButton(
                                 padding: EdgeInsets.symmetric(horizontal: 20),
