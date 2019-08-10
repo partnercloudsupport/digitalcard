@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:digitalcard/Common/Constants.dart' as cnst;
+import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -224,7 +225,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
       'name': txtName.text.trim(),
       'mobile': txtMobile.text.trim(),
       //'memberid': widget.memberId.toString(),
-      'memberid': _memberClass!=null ? _memberClass.Id : widget.memberId,
+      'memberid': _memberClass != null ? _memberClass.Id : widget.memberId,
     };
 
     Future res = Services.SaveShare(data);
@@ -239,6 +240,32 @@ class _CardShareComponentState extends State<CardShareComponent> {
       print(e.toString());
       Navigator.pop(context);
     });
+  }
+
+  _onCompanySelect(val) {
+    if (checkValidity(val.ExpDate)) {
+      setState(() {
+        _memberClass=val;
+      });
+    } else {
+      showMsg("This Card Is Not Purchased");
+    }
+  }
+
+  bool checkValidity(date) {
+    if (date.trim() != null && date.trim() != "") {
+      final f = new DateFormat('dd MMM yyyy');
+      DateTime validTillDate = f.parse(date);
+      print(validTillDate);
+      DateTime currentDate = new DateTime.now();
+      print(currentDate);
+      if (validTillDate.isAfter(currentDate)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else
+      return false;
   }
 
   @override
@@ -291,9 +318,7 @@ class _CardShareComponentState extends State<CardShareComponent> {
                                                     "Select Your Company"),
                                                 value: _memberClass,
                                                 onChanged: (val) {
-                                                  setState(() {
-                                                    _memberClass = val;
-                                                  });
+                                                  _onCompanySelect(val);
                                                 },
                                                 items: cardList.map(
                                                     (MemberClass memberData) {

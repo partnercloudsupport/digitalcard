@@ -21,6 +21,7 @@ class _MemberSelectionState extends State<MemberSelection> {
         cnst.Session.Company, widget.memberList[index].Company);
     await prefs.setString(
         cnst.Session.ReferCode, widget.memberList[index].MyReferralCode);
+    await prefs.setBool(cnst.Session.IsActivePayment, widget.memberList[index].IsActivePayment);
     Navigator.pushReplacementNamed(context, "/Dashboard");
   }
 

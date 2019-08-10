@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
   bool isLoading = false;
   bool isLoadingProfile = false;
   bool IsActivePayment = false;
+  bool IsExpired = false;
 
   String MemberId = "";
   String Name = "";
@@ -46,10 +47,11 @@ class _HomeState extends State<Home> {
       print(validTillDate);
       DateTime currentDate = new DateTime.now();
       print(currentDate);
-      if (validTillDate.isAfter(currentDate))
+      if (validTillDate.isAfter(currentDate)) {
         return true;
-      else
+      } else {
         return false;
+      }
     } else
       return false;
   }
@@ -61,6 +63,7 @@ class _HomeState extends State<Home> {
     if (isActivePayment != null)
       setState(() {
         IsActivePayment = isActivePayment;
+        print(isActivePayment);
       });
   }
 
@@ -484,10 +487,10 @@ class _HomeState extends State<Home> {
                           },
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0))),
-                      (IsActivePayment == true &&
-                              MemberType.toLowerCase() == "trial")
-                          ?
-                      Padding(
+                      (IsActivePayment == true) &&
+                              (MemberType.toLowerCase() == "trial" ||
+                                  checkValidity() == false)
+                          ? Padding(
                               padding: EdgeInsets.only(left: 20),
                               child: RaisedButton(
                                 padding: EdgeInsets.symmetric(horizontal: 20),

@@ -238,7 +238,7 @@ class _EditOfferState extends State<EditOffer>
                   decoration: InputDecoration(
                       prefixIcon: Icon(Icons.description),
                       hintText: "Description"),
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.multiline,
                   style: TextStyle(color: Colors.black),
                 ),
                 //height: 40,

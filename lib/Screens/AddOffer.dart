@@ -227,7 +227,7 @@ class _AddOfferState extends State<AddOffer>
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.description),
                         hintText: "Description"),
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.multiline,
                     style: TextStyle(color: Colors.black),
                   ),
                   //height: 40,
